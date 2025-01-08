@@ -1,0 +1,19 @@
+/* Centrer l'image dans le conteneur */
+#header .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+/* Appliquer un effet de clarté à l'image */
+.logo-image {
+    width: 100px;
+    height: auto;
+    filter: brightness(1.2); /* Augmente la luminosité */
+    transition: filter 0.3s ease; /* Animation pour l'effet */
+}
+
+.logo-image:hover {
+    filter: brightness(1.5); /* Effet plus lumineux au survol */
+}
