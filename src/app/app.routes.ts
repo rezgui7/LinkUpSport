@@ -21,18 +21,15 @@ export const routes: Routes = [
     path: 'user',
     component: AllTemplateUserComponent,
     children: [
-      {
-        path: 'addEvent',
-        component: AddAcademyComponent
-      }
-    ]
-  },
-  // Nouvelle route pour Login
-  { path: 'login', component: LoginComponent },
+      { path: 'login', component: LoginComponent },
   
   // Nouvelle route pour Register
   { path: 'register', component: RegisterComponent },
   { path: 'role', component: RoleselectionComponent },
 
+    ]
+  },
+  // Nouvelle route pour Login
+  
   // Route de redirection par défaut si l'URL ne correspond à aucune route
 ];

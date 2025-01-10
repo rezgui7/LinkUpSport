@@ -12,7 +12,7 @@ export class RoleselectionComponent {
 
   selectRole(role: string): void {
     // Naviguer vers la page d'inscription avec le rôle sélectionné
-    this.router.navigate(['/register'], { queryParams: { role } });
+    this.router.navigate(['user/register'], { queryParams: { role } });
   }
 
 }

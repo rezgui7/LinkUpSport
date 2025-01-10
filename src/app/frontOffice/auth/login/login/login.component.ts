@@ -5,8 +5,7 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2'; // Importer Swal
 import { CommonModule, } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { HeaderUserComponent } from '../../../header/header-user/header-user.component';
-import { FooterUserComponent } from '../../../footer/footer-user/footer-user.component';
+
 @Component({
   selector: 'app-login',
   standalone: true,  // Déclarez que le composant est autonome
@@ -14,8 +13,7 @@ import { FooterUserComponent } from '../../../footer/footer-user/footer-user.com
     ReactiveFormsModule,
     CommonModule,
     HttpClientModule, 
-    HeaderUserComponent,
-    FooterUserComponent
+    
   ],
   providers:[AuthService],
   templateUrl: './login.component.html',
@@ -42,50 +40,70 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
+    // Vérifier si le formulaire est invalide
     if (this.loginForm.invalid) {
-      return;
+      // Vérifier spécifiquement si les champs sont vides
+      if (this.f['email'].invalid) {
+        Swal.fire({
+          title: 'Email obligatoire',
+          text: 'Veuillez entrer un email valide.',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+      } else if (this.f['password'].invalid) {
+        Swal.fire({
+          title: 'Mot de passe obligatoire',
+          text: 'Veuillez entrer votre mot de passe.',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+      }
+      return; // Ne pas soumettre le formulaire si invalidité
     }
-
+  
     const credentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password
     };
-
-   this.authService.login(credentials).subscribe({
-   next: (response) => {
-     // Store role in session storage
-     sessionStorage.setItem('user-role', response.role); // Assuming the role is returned in the response
-      sessionStorage.setItem('auth-token', response.token); // Assuming you store the token in the response as well
-
-     Swal.fire({
-       title: 'Login Successful!',
-       text: 'Welcome back!',
-       icon: 'success',
-       confirmButtonText: 'OK'
-     });
-
-     // Logic for redirection based on role
-     if (response.role === 'ROLE_ORGANISATEUR') {
-      this.router.navigate(['/admin']);
-    } else if (response.role === 'ROLE_SUPERVISEUR') {
-      this.router.navigate(['/user']);
-    } else {
-      this.router.navigate(['/user']);
-    }
-  },
-   error: (err) => {
-     console.error(err);
-     Swal.fire({
-       title: 'Login Failed',
-       text: err.error || 'Invalid email or password.',
-       icon: 'error',
-       confirmButtonText: 'Try Again'
-     });
-   }
- });
-
+  
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        // Enregistrement du rôle dans le sessionStorage
+        sessionStorage.setItem('user-role', response.role);
+        sessionStorage.setItem('auth-token', response.token);
+  
+        Swal.fire({
+          title: 'Connexion réussie!',
+          text: 'Bienvenue à nouveau!',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+  
+        // Redirection en fonction du rôle
+        if (response.role === 'ROLE_ORGANISATEUR') {
+          this.router.navigate(['/admin']);
+        } else if (response.role === 'ROLE_SUPERVISEUR') {
+          this.router.navigate(['/user']);
+        } else (response.role === 'ROLE_RESPONSABLE')
+        {
+          this.router.navigate(['/admin']);
+        }
+       
+      },
+      error: (err) => {
+        console.error(err);
+        Swal.fire({
+          title: 'Échec de la connexion',
+          text: err.error || 'Email ou mot de passe invalide.',
+          icon: 'error',
+          confirmButtonText: 'Réessayer'
+        });
+      }
+    });
   }
+  
+
   navigateToRegister() {
-    this.router.navigate(['/role']);
+    this.router.navigate(['/user/role']);
   }
 }

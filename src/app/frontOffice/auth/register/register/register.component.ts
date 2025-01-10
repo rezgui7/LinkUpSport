@@ -30,14 +30,14 @@ export class RegisterComponent implements OnInit {
     password: '',
     address: '',
     phoneNumber: '',
-    role: '',
+    role: 'ROLE_ORGANISATEUR',
     pictureUrl: '',
   };
 
   constructor(
     private authService: AuthService, 
     private router: Router, 
-    private route: ActivatedRoute // Inject ActivatedRoute here
+    private route: ActivatedRoute 
   ) {}
 
   ngOnInit(): void {
@@ -58,25 +58,53 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
+    if (!this.user.username || !this.user.email || !this.user.password || !this.user.address || !this.user.phoneNumber|| !this.user.role) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Champs manquants',
+        text: 'Merci de remplir tous les champs.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
+    // Vérifier si l'email est valide
+    if (!this.isValidEmail(this.user.email)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Email invalide',
+        text: 'Merci de fournir un email valide.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
+
     this.authService.register(this.user).subscribe({
       next: (response) => {
         Swal.fire({
           icon: 'success',
-          title: 'Registration Successful',
-          text: 'You can now log in!',
+          title: 'Inscription réussie',
+          text: 'Vous pouvez maintenant vous connecter !',
           confirmButtonText: 'OK',
-        }).then(() => this.router.navigate(['/login']));
+        }).then(() => this.router.navigate(['user/login']));
       },
       error: (error) => {
-        const errorMessage =
-          error.error?.message || 'Failed to register. Please try again.';
-        console.error('Registration error:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Registration Failed',
-          text: errorMessage,
-          confirmButtonText: 'OK',
-        });
+        const errorMessage = error.error?.message || 'L\'inscription a échoué. Veuillez réessayer.';
+        if (errorMessage.includes('email already exists')) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Email déjà utilisé',
+            text: 'L\'email que vous avez fourni est déjà associé à un autre compte.',
+            confirmButtonText: 'OK',
+          });
+        } else {
+          Swal.fire({
+            icon: 'error',
+            title: 'Échec de l\'inscription',
+            text: errorMessage,
+            confirmButtonText: 'OK',
+          });
+        }
       },
     });
   }

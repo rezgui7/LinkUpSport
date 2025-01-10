@@ -61,7 +61,7 @@ export class AuthService {
 
 logout(): void {
   sessionStorage.clear();
-  this.router.navigate(['/login']); 
+  this.router.navigate(['/user/login']); 
 }
 
   /* JWT f session */
