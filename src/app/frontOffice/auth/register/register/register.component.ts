@@ -1,38 +1,62 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AuthService } from '../../../service/auth.service';
 import { User } from '../../../../models/User';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';import { CommonModule } from '@angular/common';
-import { HeaderUserComponent } from '../../../header/header-user/header-user.component';
-import { FooterUserComponent } from '../../../footer/footer-user/footer-user.component';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router'; // Correct import
 
 @Component({
   selector: 'app-register',
-  standalone: true,  // Déclarez que le composant est autonome
-  imports: [FormsModule, CommonModule, HttpClientModule],  // Ajouter HttpClientModule ici
-  providers:[AuthService],
+  standalone: true,
+  imports: [FormsModule, CommonModule, HttpClientModule], // Remove ActivatedRoute from here
+  providers: [AuthService],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css'],
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+  roles = [
+    { name: 'Superviseur', value: 'ROLE_SUPERVISEUR', description: 'Gère les opérations globales.' },
+    { name: 'Organisateur', value: 'ROLE_ORGANISATEUR', description: 'Planifie et organise les événements.' },
+    { name: 'Responsable', value: 'ROLE_RESPONSABLE', description: 'Supervise les activités spécifiques.' },
+  ];
+
+  selectedRole: string | null = null;
   user: User = {
     username: '',
     email: '',
     password: '',
     address: '',
     phoneNumber: '',
-    role: 'ROLE_ORGANISATEUR', // Par défaut
-    pictureUrl: '', // Optionnel, peut être laissé vide
+    role: '',
+    pictureUrl: '',
   };
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router, 
+    private route: ActivatedRoute // Inject ActivatedRoute here
+  ) {}
+
+  ngOnInit(): void {
+    // Récupérer le rôle sélectionné depuis les query params
+    this.route.queryParams.subscribe((params) => {
+      this.user.role = params['role'] || ''; // Pré-remplir le rôle si présent
+    });
+  }
+
+  selectRole(role: string): void {
+    this.selectedRole = role;
+    this.user.role = role;
+  }
+
   isValidEmail(email: string): boolean {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailPattern.test(email);
   }
-  
+
   register(): void {
     this.authService.register(this.user).subscribe({
       next: (response) => {

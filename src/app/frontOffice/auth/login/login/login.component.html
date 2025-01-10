@@ -1,3 +1,4 @@
+<app-header-user></app-header-user>
 <div class="login-container">
     <h2>Login</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
@@ -22,7 +23,10 @@
     </form>
   
     <div class="mt-3">
-      <p>Don't have an account? <a routerLink="/register" class="link-primary">Register here</a></p>
+      <p>Don't have an account? <span class="link-primary" (click)="navigateToRegister()">Register here</span></p>
+
+
     </div>
   </div>
+  <app-footer-user></app-footer-user>
   

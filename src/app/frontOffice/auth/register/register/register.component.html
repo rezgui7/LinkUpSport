@@ -74,6 +74,18 @@
         <small *ngIf="address.errors?.['required']">Adresse requise.</small>
       </div>
     </div>
+<!-- Rôle sélectionné (affiché en lecture seule) -->
+<div class="form-group">
+  <label for="role">Rôle sélectionné :</label>
+  <input
+    type="text"
+    id="role"
+    name="role"
+    [(ngModel)]="user.role"
+    class="form-control"
+    readonly
+  />
+</div>
 
     <!-- Phone Number -->
     <div class="form-group">

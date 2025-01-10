@@ -4,6 +4,7 @@ import { AddAcademyComponent } from './backOffice/addAcademy/add-academy/add-aca
 import { AllTemplateUserComponent } from './frontOffice/allTemplateUser/all-template-user/all-template-user.component';
 import { LoginComponent } from './frontOffice/auth/login/login/login.component';  // Importation du LoginComponent
 import { RegisterComponent } from './frontOffice/auth/register/register/register.component';
+import { RoleselectionComponent } from './frontOffice/auth/RolesSelection/roleselection/roleselection.component';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
   
   // Nouvelle route pour Register
   { path: 'register', component: RegisterComponent },
+  { path: 'role', component: RoleselectionComponent },
 
   // Route de redirection par défaut si l'URL ne correspond à aucune route
 ];

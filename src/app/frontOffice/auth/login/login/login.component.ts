@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2'; // Importer Swal
 import { CommonModule, } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
+import { HeaderUserComponent } from '../../../header/header-user/header-user.component';
+import { FooterUserComponent } from '../../../footer/footer-user/footer-user.component';
 @Component({
   selector: 'app-login',
   standalone: true,  // Déclarez que le composant est autonome
@@ -13,6 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
     ReactiveFormsModule,
     CommonModule,
     HttpClientModule, 
+    HeaderUserComponent,
+    FooterUserComponent
   ],
   providers:[AuthService],
   templateUrl: './login.component.html',
@@ -51,8 +54,8 @@ export class LoginComponent {
    this.authService.login(credentials).subscribe({
    next: (response) => {
      // Store role in session storage
-     const userRole = response.role; // Assuming the role is returned in the response
-     sessionStorage.setItem('user-role', userRole);
+     sessionStorage.setItem('user-role', response.role); // Assuming the role is returned in the response
+      sessionStorage.setItem('auth-token', response.token); // Assuming you store the token in the response as well
 
      Swal.fire({
        title: 'Login Successful!',
@@ -62,12 +65,14 @@ export class LoginComponent {
      });
 
      // Logic for redirection based on role
-     if (userRole === 'ROLE_ORGANISATEUR') {
-       this.router.navigate(['/admin']);
-     } else {
-       this.router.navigate(['/user']);
-     }
-   },
+     if (response.role === 'ROLE_ORGANISATEUR') {
+      this.router.navigate(['/admin']);
+    } else if (response.role === 'ROLE_SUPERVISEUR') {
+      this.router.navigate(['/user']);
+    } else {
+      this.router.navigate(['/user']);
+    }
+  },
    error: (err) => {
      console.error(err);
      Swal.fire({
@@ -79,5 +84,8 @@ export class LoginComponent {
    }
  });
 
+  }
+  navigateToRegister() {
+    this.router.navigate(['/role']);
   }
 }
