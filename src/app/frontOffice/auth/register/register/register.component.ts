@@ -17,11 +17,7 @@ import { ActivatedRoute } from '@angular/router'; // Correct import
   styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
-  roles = [
-    { name: 'Superviseur', value: 'ROLE_SUPERVISEUR', description: 'Gère les opérations globales.' },
-    { name: 'Organisateur', value: 'ROLE_ORGANISATEUR', description: 'Planifie et organise les événements.' },
-    { name: 'Responsable', value: 'ROLE_RESPONSABLE', description: 'Supervise les activités spécifiques.' },
-  ];
+ 
 
   selectedRole: string | null = null;
   user: User = {
@@ -30,7 +26,7 @@ export class RegisterComponent implements OnInit {
     password: '',
     address: '',
     phoneNumber: '',
-    role: 'ROLE_ORGANISATEUR',
+    role: '',
     pictureUrl: '',
   };
 
@@ -43,9 +39,16 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     // Récupérer le rôle sélectionné depuis les query params
     this.route.queryParams.subscribe((params) => {
-      this.user.role = params['role'] || ''; // Pré-remplir le rôle si présent
+      if (params['role']) {
+        this.user.role = params['role'];
+        console.log('User object before API call:', this.user);
+        console.log('Rôle récupéré depuis l\'URL:', this.user.role);  // Ajoutez ce log pour vérifier
+      }
+
+
     });
   }
+  
 
   selectRole(role: string): void {
     this.selectedRole = role;
@@ -58,7 +61,7 @@ export class RegisterComponent implements OnInit {
   }
 
   register(): void {
-    if (!this.user.username || !this.user.email || !this.user.password || !this.user.address || !this.user.phoneNumber|| !this.user.role) {
+    if (!this.user.username || !this.user.email || !this.user.password || !this.user.address || !this.user.phoneNumber || !this.user.role) {
       Swal.fire({
         icon: 'error',
         title: 'Champs manquants',
@@ -67,8 +70,9 @@ export class RegisterComponent implements OnInit {
       });
       return;
     }
-
-    // Vérifier si l'email est valide
+  
+    console.log('User object before API call:', this.user);  // Vérifiez l'objet user avant l'envoi
+  
     if (!this.isValidEmail(this.user.email)) {
       Swal.fire({
         icon: 'error',
@@ -78,7 +82,7 @@ export class RegisterComponent implements OnInit {
       });
       return;
     }
-
+  
     this.authService.register(this.user).subscribe({
       next: (response) => {
         Swal.fire({
@@ -108,4 +112,4 @@ export class RegisterComponent implements OnInit {
       },
     });
   }
-}
+}  

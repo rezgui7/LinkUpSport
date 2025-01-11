@@ -47,21 +47,24 @@
     </div>
 
     <!-- Rôle sélectionné -->
-    <div class="form-group">
-      <div class="label-container">
-        <label for="role">Rôle sélectionné :</label>
-      </div>
-      <div class="input-container">
-        <input
-          type="text"
-          id="role"
-          name="role"
-          [(ngModel)]="user.role"
-          class="form-control"
-          readonly
-        />
-      </div>
-    </div>
+    <!-- Rôle sélectionné -->
+<div class="form-group">
+  <div class="label-container">
+    <label for="role">Rôle :</label>
+  </div>
+  <div class="input-container">
+    <input
+      type="text"
+      id="role"
+      name="role"
+      [(ngModel)]="user.role"
+      class="form-control"
+      placeholder="Rôle sélectionné"
+      readonly
+    />
+  </div>
+</div>
+
 
     <!-- Phone Number -->
     <div class="form-group">
@@ -131,6 +134,6 @@
 
 
     <!-- Submit Button -->
-    <button type="submit" class="btn-primary" [disabled]="registerForm.invalid">S'inscrire</button>
+    <button type="submit" [disabled]="registerForm.invalid" class="btn btn-primary">S'inscrire</button>
   </form>
 </div>

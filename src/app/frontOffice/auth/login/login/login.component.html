@@ -14,10 +14,10 @@
       />
       <div
         *ngIf="f['email'].invalid && (f['email'].dirty || f['email'].touched)"
-        class="alert alert-danger"
+       
       >
-        <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
-        <div *ngIf="f['email'].errors?.['email']">Invalid email format.</div>
+        <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
+        <small *ngIf="f['email'].errors?.['email']">Invalid email format.</small>
       </div>
     </div>
 
@@ -33,9 +33,10 @@
       />
       <div
         *ngIf="f['password'].invalid && (f['password'].dirty || f['password'].touched)"
-        class="alert alert-danger"
+        
       >
-        <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
+        <small *ngIf="f['password'].errors?.['required']">Password is required.</small>
+        
       </div>
     </div>
 

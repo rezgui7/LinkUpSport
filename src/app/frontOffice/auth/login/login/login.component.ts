@@ -80,13 +80,10 @@ export class LoginComponent {
         });
   
         // Redirection en fonction du rôle
-        if (response.role === 'ROLE_ORGANISATEUR') {
+        if (response.role === 'ROLE_RESPONSABLE' || response.role === 'ROLE_ORGANISATEUR') {
           this.router.navigate(['/admin']);
         } else if (response.role === 'ROLE_SUPERVISEUR') {
           this.router.navigate(['/user']);
-        } else (response.role === 'ROLE_RESPONSABLE')
-        {
-          this.router.navigate(['/admin']);
         }
        
       },
