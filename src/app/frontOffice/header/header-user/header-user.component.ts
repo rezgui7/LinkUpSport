@@ -3,6 +3,8 @@ import { RouterModule } from '@angular/router'; // Import du RouterModule
 import { AuthService } from '../../service/auth.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import Swal from 'sweetalert2';
+
 @Component({
   selector: 'app-header-user',
   standalone: true,
@@ -24,10 +26,29 @@ export class HeaderUserComponent  {
   }
 
   logout(): void {
-    // Supprimer les informations de session lors de la déconnexion
-    sessionStorage.removeItem('auth-token');
-    sessionStorage.removeItem('user-role');
-    this.isLoggedIn = false;
-    this.userRole = null;
-  }
+      Swal.fire({
+        title: 'Êtes-vous sûr ?',
+        text: 'Voulez-vous vraiment vous déconnecter ?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6', // Bleu pour la confirmation
+        cancelButtonColor: '#d33', // Rouge pour annuler
+        confirmButtonText: 'Oui, déconnectez-moi!',
+        cancelButtonText: 'Annuler'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Si l'utilisateur confirme, procéder à la déconnexion
+          sessionStorage.removeItem('auth-token');
+          sessionStorage.removeItem('user-role');
+          this.isLoggedIn = false;
+          this.userRole = null;
+    
+          Swal.fire(
+            'Déconnecté!',
+            'Vous avez été déconnecté avec succès.',
+            'success'
+          );
+        }
+      });
+    }
 }

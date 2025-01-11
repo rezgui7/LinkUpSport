@@ -1,19 +1,61 @@
-/* Centrer l'image dans le conteneur */
-#header .logo {
+/* Style pour le bouton Login */
+.login-btn {
     display: flex;
-    justify-content: center;
     align-items: center;
-    width: 100%;
+    background-color: #3ca0e7; /* Bleu clair */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    left: -20px; /* Décale le bouton vers la gauche de 10px */
 }
 
-/* Appliquer un effet de clarté à l'image */
-.logo-image {
-    width: 100px;
-    height: auto;
-    filter: brightness(1.2); /* Augmente la luminosité */
-    transition: filter 0.3s ease; /* Animation pour l'effet */
+/* Changer la couleur du fond au survol */
+.login-btn:hover {
+    background-color: #2b4bc0; /* Bleu plus foncé au survol */
+    transform: scale(1.05); /* Légère augmentation de la taille */
 }
 
-.logo-image:hover {
-    filter: brightness(1.5); /* Effet plus lumineux au survol */
+/* Ajouter un espace entre l'icône et le texte */
+.login-btn i {
+    margin-right: 8px;
+}
+
+/* Changer la couleur du texte au survol */
+.login-btn:hover {
+    color: #fff;
+}
+
+/* Style spécifique pour le bouton Logout */
+.logout-btn {
+    display: flex;
+    align-items: center;
+    background-color: #3cabe7; /* Rouge foncé */
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    text-decoration: none;
+    position: relative;
+    left: -20px; /* Décale le bouton vers la gauche de 10px */
+}
+
+/* Changer la couleur du fond au survol */
+.logout-btn:hover {
+    background-color: #c0392b; /* Rouge plus foncé au survol */
+    transform: scale(1.05); /* Légère augmentation de la taille */
+}
+
+/* Ajouter un espace entre l'icône et le texte */
+.logout-btn i {
+    margin-right: 8px;
+}
+
+/* Changer la couleur du texte au survol */
+.logout-btn:hover {
+    color: #fff;
 }

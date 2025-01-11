@@ -93,7 +93,7 @@ export class RegisterComponent implements OnInit {
         }).then(() => this.router.navigate(['user/login']));
       },
       error: (error) => {
-        const errorMessage = error.error?.message || 'L\'inscription a échoué. Veuillez réessayer.';
+        const errorMessage = error.error?.message || 'Email déjà utilisé.';
         if (errorMessage.includes('email already exists')) {
           Swal.fire({
             icon: 'error',
