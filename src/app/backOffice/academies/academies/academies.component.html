@@ -1,0 +1,106 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
+    <h1> LIST D'ACADEMIES </h1>
+<br>
+
+
+<br>
+
+<div class="layout-wrapper layout-content-navbar">
+  <div class="layout-container">
+    
+    <!-- Layout container -->
+    <div class="layout-page">
+      <!-- Navbar -->
+
+    
+  <div class="content-wrapper">
+      <!-- Content -->
+    
+      <div class="container-xxl flex-grow-1 container-p-y">
+        
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+    
+    
+              <h5 class="card-header">ACADEMIES : </h5>
+              <!-- Select Options Field -->
+              
+              
+    
+    
+              <div class="table-responsive text-nowrap">
+                  <table class="table">
+                    <caption class="ms-4">List of ACADEMIES</caption>
+                    <thead>
+                      <tr>
+                        <th>Nom</th>
+                        <th>adresse</th>
+                        <th>nom proprietaire</th>
+                        <th>telephone</th>
+                        <th>email</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of academieList">
+                        <td>{{item.nom}}</td>
+                        <td>{{item.adresse}}</td> 
+                        <td>{{item.nomproprietaire}}</td> 
+                        
+                        <td>{{item.telephone}}</td> 
+                        <td>{{item.email}}</td> 
+                        
+                        
+                        <td>
+                          <div class="dropdown">
+                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                              <i class="bx bx-dots-vertical-rounded"></i>
+                            </button>
+                            <div class="dropdown-menu">
+                            
+                              <a  class="badge bg-label-primary me-1"  href="admin/ModifierAcademie/{{item.id}}" class="dropdown-item" href="javascript:void(0);">
+                                <i class="bx bx-edit me-1"></i> Edit
+                              </a>
+                              <button (click)="delete(item.id)" class="dropdown-item" href="javascript:void(0);"
+                                ><i class="bx bx-trash me-1"></i> Delete</button
+                              >
+                            </div>
+                          </div>
+                        </td>
+                        
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+    
+    
+              <!-- /Account -->
+            </div>
+            <br>
+            
+          </div>
+        </div>
+      
+      </div>
+      <!-- / Content -->
+    
+    
+    </div>
+        </div></div></div>
+        <div class="buy-now">
+          <a
+            href="AddBannerAd/"
+            class="btn btn-primary btn-buy-now"
+          >Add ACADEMIE</a
+          >
+        </div>
+
+
+  
+</div>

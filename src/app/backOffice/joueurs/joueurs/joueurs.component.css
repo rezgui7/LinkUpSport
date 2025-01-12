@@ -1,0 +1,69 @@
+/* Active Cell */
+.active-cell {
+    background-color: green;
+    color: white;
+    padding: 2px 4px; /* Smaller padding */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover effect for active cell */
+  .active-cell:hover {
+    background-color: darkgreen;
+  }
+  
+  /* Inactive Cell */
+  .inactive-cell {
+    background-color: red;
+    color: white;
+    padding: 2px 4px; /* Smaller padding */
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  /* Hover effect for inactive cell */
+  .inactive-cell:hover {
+    background-color: darkred;
+  }
+  
+  
+    
+  .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .pagination {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      gap: 10px; /* Adjust the gap between pagination controls */
+    }
+    
+    .pagination.page-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .pagination.page-item:first-child,
+    .pagination.page-item:last-child {
+      cursor: pointer;
+    }
+    
+    .pagination.page-item.disabled.page-link {
+      color: #6c757d; /* Light gray color for disabled links */
+      cursor: not-allowed;
+    }
+    
+    .pagination.page-item.active.page-link {
+      background-color: #007bff; /* Example: blue background for active link */
+      color: white; /* White text for active link */
+    }
+  
+  
+    /*--------------------------------------------------------------------------------------*/
+  

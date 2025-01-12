@@ -11,26 +11,25 @@
 
 
                 
-                <form #academieForm="ngForm" (ngSubmit)="addAcademie(academieForm)">
+                <form #academieForm="ngForm" (ngSubmit)="updateAcademie(academieForm)">
                     <div class="form-outline mb-4">
                         <input class="form-control" id="form1Example1" [(ngModel)]="academie.nom" name="nom" />
                         <label class="form-label" for="form1Example1">Nom</label>
                     </div>
-
                     <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example2" [(ngModel)]="academie.adresse" name="adresse" />
-                        <label class="form-label" for="form1Example1">Academie adresse</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example3" [(ngModel)]="academie.nomproprietaire" name="nomproprietaire" />
+                        <input class="form-control" id="form1Example2" [(ngModel)]="academie.nomproprietaire" name="nomproprietaire"/>
                         <label class="form-label" for="form1Example1">Nom proprietaire</label>
                     </div>
                     <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example4" [(ngModel)]="academie.telephone" name="telephone" />
-                        <label class="form-label" for="form1Example1">Numéro telephone</label>
+                        <input class="form-control" id="form1Example3" [(ngModel)]="academie.adresse" name="adresse"/>
+                        <label class="form-label" for="form1Example1">Adresse</label>
                     </div>
                     <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example5" [(ngModel)]="academie.email" name="email" />
+                        <input class="form-control" id="form1Example4" [(ngModel)]="academie.telephone" name="telephone"/>
+                        <label class="form-label" for="form1Example1">Telephone</label>
+                    </div>
+                    <div class="form-outline mb-4">
+                        <input class="form-control" id="form1Example5" [(ngModel)]="academie.email" name="email"/>
                         <label class="form-label" for="form1Example1">Email</label>
                     </div>
                     
@@ -39,7 +38,7 @@
 
                     <div align="end">
                         <button type="button" class="btn btn-outline-dark" (click)="clear(academieForm)">Clear</button>
-                        <button type="submit" class="btn btn-outline-success">ajout Academie</button>
+                        <button type="submit" class="btn btn-outline-success">Update Course</button>
                     </div>
 
                 </form>

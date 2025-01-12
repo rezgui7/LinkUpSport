@@ -1,0 +1,60 @@
+/* Ensure the label acts as a block-level element */
+.custom-file-upload {
+    display: block; /* This is important for d-grid and w-100 to work */
+   }
+   
+   /* Icon */
+   .icon-upload {
+    margin-right: 5px; /* Add some space between the icon and the text */
+   }
+   /* Container for the image to ensure it's centered */
+.image-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Adjust the space between the button and the image */
+   }
+   
+   /* Circled Image */
+   .circled-image {
+    width: 100px; /* Adjust the size as needed */
+    height: 100px; /* Adjust the size as needed */
+    border-radius: 50%; /* This makes the image circular */
+    object-fit: cover; /* This ensures the image covers the area without stretching */
+   }
+
+
+   /*----------------------------------------------------------------------------------------------*/
+
+   .image-selection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   
+   .file-input {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+   }
+   
+   .image-cropper {
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 20px;
+   }
+   
+   .cropped-image {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
+   

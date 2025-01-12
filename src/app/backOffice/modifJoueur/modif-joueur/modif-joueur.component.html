@@ -1,0 +1,117 @@
+<br>
+<br>
+<br>
+<br>
+<div class="layout-wrapper layout-content-navbar">
+    <div class="layout-container">
+  <!-- Menu -->
+    
+  <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+  </aside>    <!-- / Menu -->
+  <div class="layout-page">
+  <div class="container-xxl">
+      <div class="authentication-wrapper authentication-basic container-p-y">
+        <div class="authentication-inner">
+          <!-- Register Card -->
+          <div class="card larger-card-horizontal">
+            <div class="card-body">
+              <br><br>
+              <h4 class="mb-2">Edit Your Joueur Here </h4>
+              <br>
+              <label for="firstname" class="form-label">Profile Picture </label>
+  <!-- Image Selection -->
+  <div class="image-selection">
+      <!-- Hidden file input -->
+      <input type="file" id="fileInput" (change)="fileChangeEvent($event)" class="file-input" style="display: none;" />
+     
+      <!-- Label to trigger the file input -->
+      <label for="fileInput" class="btn btn-primary d-grid w-100">Choose File</label>
+      <div *ngIf="isBrowser">
+
+      <image-cropper
+           [imageChangedEvent]="imageChangedEvent"
+           [maintainAspectRatio]="true"
+           [aspectRatio]="4 / 3"
+           format="png"
+           (imageCropped)="imageCropped($event)"
+           (imageLoaded)="imageLoaded($event)"
+           (cropperReady)="cropperReady()"
+           (loadImageFailed)="loadImageFailed()"
+           class="image-cropper"
+      ></image-cropper>
+      </div>
+      <img [src]="croppedImage ? croppedImage : imagesToShow[0]" class="circled-image" />
+     </div>
+              <br>
+              <form #formGroup="ngForm" id="formAuthentication" class="mb-3" (ngSubmit)="update()">
+                <div class="mb-3" >
+                  <label for="nom" class="form-label">Nom</label>
+                  <div class="input-group input-group-merge">
+                    <input type="text" class="form-control" id="nom" [(ngModel)]="joueur.nom" name="nom"  [disabled]="!isEditable['nom']"/>
+                    <span class="input-group-text cursor-pointer" (click)="enableEdit('nom')"><i class="bx bx-pencil"></i></span>
+                  </div>
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="prenom" class="form-label">Prenom</label>
+                  
+                  <div class="input-group input-group-merge">
+                    <input type="text" class="form-control" id="prenom" name="prenom" placeholder="Enter your lastname"
+                    [(ngModel)]="joueur.prenom" [disabled]="!isEditable['prenom']"/>
+                    <span class="input-group-text cursor-pointer" (click)="enableEdit('prenom')"><i class="bx bx-pencil"></i></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="datenaissance" class="form-label">date naissance</label>
+                  
+                  <div class="input-group input-group-merge">
+                    <input type="date"  class="form-control" id="datenaissance" name="datenaissance" placeholder="Enter your date naissance"
+                    [(ngModel)]="joueur.datenaissance" [disabled]="!isEditable['datenaissance']"/>
+                    <span class="input-group-text cursor-pointer" (click)="enableEdit('datenaissance')"><i class="bx bx-pencil"></i></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="telephone" class="form-label">telephone</label>
+                  <div class="input-group input-group-merge">
+                    <input type="text" class="form-control" id="telephone" name="telephone" placeholder="Enter your telephone"
+                  [(ngModel)]="joueur.telephone" [disabled]="!isEditable['telephone']"/>
+                    <span class="input-group-text cursor-pointer" (click)="enableEdit('telephone')"><i class="bx bx-pencil"></i></span>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="year" class="form-label">Category (Year)</label>
+                    
+                    <div class="input-group input-group-merge">
+                      <input 
+                        id="year" 
+                        type="number" 
+                        class="form-control" 
+                        name="year" 
+                        [(ngModel)]="joueur.categorie" 
+                        [disabled]="!isEditable['categorie']" 
+                        [min]="1990" 
+                        [max]="2100" 
+                        placeholder="Enter year (1990-2100)" />
+                        
+                      <span class="input-group-text cursor-pointer" (click)="enableEdit('categorie')">
+                        <i class="bx bx-pencil"></i>
+                      </span>
+                    </div>
+                  </div>
+                
+                
+    
+    
+                <button class="btn btn-primary d-grid w-100" [disabled]="!fieldChanges">Update</button>
+    
+              </form>
+            </div>
+          </div>
+          <!-- Register Card -->
+        </div>
+      </div>
+    </div>
+    
+    <!-- / Content -->
+  </div></div></div>
