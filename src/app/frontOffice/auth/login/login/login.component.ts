@@ -77,6 +77,7 @@ export class LoginComponent {
           text: 'Bienvenue à nouveau!',
           icon: 'success',
           confirmButtonText: 'OK'
+          
         });
   
         // Redirection en fonction du rôle
