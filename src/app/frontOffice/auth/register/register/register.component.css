@@ -1,0 +1,79 @@
+/* Container for the registration form */
+.register-container {
+  max-width: 400px; /* Align with login card width */
+  margin: 50px auto;
+  padding: 25px; /* Reduced padding for smaller cards */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #2c2f36; /* Same dark background */
+  color: #fff;
+}
+
+/* Header style for the registration form */
+.register-container h2 {
+  text-align: center;
+  font-size: 22px; /* Match login font size */
+  margin-bottom: 20px;
+}
+
+/* Form group for each form field */
+.register-container .form-group {
+  margin-bottom: 15px;
+  text-align: center; /* Center align the form fields */
+}
+
+/* Input field style */
+.register-container .form-control {
+  width: 90%; /* Match login input width */
+  margin: 0 auto; /* Center the fields */
+  padding: 10px; /* Match login padding */
+  border: 1px solid #444;
+  border-radius: 5px;
+  font-size: 14px; /* Match login font size */
+  background-color: #333;
+  color: #fff;
+  text-align: left; /* Align text to the left */
+}
+
+/* Focused input field style */
+.register-container .form-control:focus {
+  border-color: #e60000;
+  background-color: #444;
+  outline: none;
+  box-shadow: 0 0 5px rgba(230, 0, 0, 0.5);
+}
+
+/* Submit button style */
+/* Submit button style */
+.register-container .btn-primary {
+  display: block;
+  width: 60%; /* Réduit la largeur du bouton à 60% de la largeur du conteneur */
+  margin: 20px auto 0; /* Centre le bouton et ajoute un espace au-dessus */
+  padding: 8px; /* Réduit le padding pour rendre le bouton plus petit */
+  background-color: #e60000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .register-container {
+    padding: 20px;
+  }
+
+  .register-container h2 {
+    font-size: 20px;
+  }
+
+  .register-container .form-control {
+    font-size: 13px;
+  }
+
+  .register-container .btn-primary {
+    font-size: 13px; /* Réduit la taille du texte dans le bouton pour les petits écrans */
+    width: 70%; /* Ajuste la largeur du bouton pour les petits écrans */
+  }
+}

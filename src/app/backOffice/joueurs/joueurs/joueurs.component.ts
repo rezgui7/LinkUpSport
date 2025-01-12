@@ -9,6 +9,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-joueurs',
@@ -19,7 +20,7 @@ import { Router } from '@angular/router';
       MatSortModule, HttpClientModule,
       MatPaginatorModule ],
   templateUrl: './joueurs.component.html',
-  providers: [ServiceBackService],
+  providers: [ServiceBackService,AuthService],
   styleUrl: './joueurs.component.css',
   host: {
     '[attr.ngSkipHydration]': 'true',  // Add ngSkipHydration to the host element

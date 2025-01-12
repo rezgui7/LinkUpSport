@@ -8,12 +8,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-modif-academy',
   standalone: true,
   imports: [HttpClientModule,FormsModule,MatGridListModule,CommonModule ],
-  providers: [ServiceBackService],
+  providers: [ServiceBackService,AuthService],
   templateUrl: './modif-academy.component.html',
   styleUrl: './modif-academy.component.css'
 })

@@ -7,12 +7,18 @@ import { ModifAcademyComponent } from './backOffice/modifAcademy/modif-academy/m
 import { AddPlayerComponent } from './backOffice/addPlayer/add-player/add-player.component';
 import { JoueursComponent } from './backOffice/joueurs/joueurs/joueurs.component';
 import { ModifJoueurComponent } from './backOffice/modifJoueur/modif-joueur/modif-joueur.component';
+import { LoginComponent } from './frontOffice/auth/login/login/login.component';
+import { RegisterComponent } from './frontOffice/auth/register/register/register.component';
+import { RoleselectionComponent } from './frontOffice/auth/RolesSelection/roleselection/roleselection.component';
+import { AuthGuardService } from './frontOffice/service/auth-guard.service';
 
 export const routes: Routes = [
     {
         path:'admin',
         component:AllTemplateAdminComponent,
+       
         children:[
+          
             {
                 path:'AddAcademy',
                 component:AddAcademyComponent
@@ -39,14 +45,22 @@ export const routes: Routes = [
             },
         ]
       },
-      {
-        path:'user',
-        component:AllTemplateUserComponent,
-        children:[
-            {
-                path:'addEvent',
-                component:AddAcademyComponent
-            }
-        ]
-      }
+      
+ 
+  {
+    path: 'user',
+    component: AllTemplateUserComponent,
+    children: [
+      { path: 'login', component: LoginComponent },
+  
+  // Nouvelle route pour Register
+  { path: 'register', component: RegisterComponent },
+  { path: 'role', component: RoleselectionComponent },
+
+    ]
+  },
+  { path: '', redirectTo: '/user/login', pathMatch: 'full' }
+  // Nouvelle route pour Login
+  
+  // Route de redirection par défaut si l'URL ne correspond à aucune route
 ];

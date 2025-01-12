@@ -1,45 +1,65 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Academie } from '../../_model/academie.model';
 import { Observable } from 'rxjs';
+import { Academie } from '../../_model/academie.model';
 import { Joueur } from '../../_model/joueur.model';
+import { AuthService } from '../../frontOffice/service/auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServiceBackService {
-  userUrl="http://localhost:8085/";
 
-  constructor(private http:HttpClient) { }
-  getAllAcademies(){
-    return this.http.get<any>(this.userUrl+'academie/displayAcademie');
-  }
-  addAcademie(t:FormData){
-    return this.http.post<Academie>(this.userUrl+'academie/addNewAcademie' , t);
-  }
-  deleteAcademie(id:number){
-    return this.http.delete(this.userUrl+'academie/deleteAcademieByID'+`/${id}`);
-  }
-  public getAcademieById(id:any):Observable<Academie>{
-    return this.http.get<Academie>(this.userUrl+'academie/displayAcademieByID'+`/${id}`);
-  }
-  updateAcademie(t:FormData){
-    return this.http.put<Academie>(this.userUrl+'academie/updateNewAcademie' , t);
+  userUrl = "http://localhost:8085/";
+
+  constructor(private http: HttpClient, private authService: AuthService) { }
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken(); // Récupérer le token depuis le sessionStorage
+    let headers = new HttpHeaders();
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`); // Ajouter l'en-tête Authorization
+    }
+    return headers;
   }
 
-  addJoueur(t:FormData){
-    return this.http.post<any>(this.userUrl+'joueur/addNewJoueur' , t);
+  getAllAcademies(): Observable<any> {
+    return this.http.get<any>(this.userUrl + 'academie/displayAcademie', { headers: this.getAuthHeaders() });
   }
-  getAllJoueurs(){
-    return this.http.get<any>(this.userUrl+'joueur/displayJoueur');
+
+  addAcademie(t: FormData): Observable<Academie> {
+    return this.http.post<Academie>(this.userUrl + 'academie/addNewAcademie', t, { headers: this.getAuthHeaders() });
   }
-  deleteJoueur(id:number){
-    return this.http.delete(this.userUrl+'joueur/deleteJoueurByID'+`/${id}`);
+
+  deleteAcademie(id: number): Observable<any> {
+    return this.http.delete(this.userUrl + 'academie/deleteAcademieByID' + `/${id}`, { headers: this.getAuthHeaders() });
   }
-  public getJoueurById(id:any):Observable<any>{
-    return this.http.get<any>(this.userUrl+'joueur/displayJoueurByID'+`/${id}`);
+
+  public getAcademieById(id: any): Observable<Academie> {
+    return this.http.get<Academie>(this.userUrl + 'academie/displayAcademieByID' + `/${id}`, { headers: this.getAuthHeaders() });
   }
-  updateJoueur(t:FormData){
-    return this.http.put<any>(this.userUrl+'joueur/updateNewJoueur' , t);
+
+  updateAcademie(t: FormData): Observable<Academie> {
+    return this.http.put<Academie>(this.userUrl + 'academie/updateNewAcademie', t, { headers: this.getAuthHeaders() });
+  }
+
+  addJoueur(t: FormData): Observable<any> {
+    return this.http.post<any>(this.userUrl + 'joueur/addNewJoueur', t, { headers: this.getAuthHeaders() });
+  }
+
+  getAllJoueurs(): Observable<any> {
+    return this.http.get<any>(this.userUrl + 'joueur/displayJoueur', { headers: this.getAuthHeaders() });
+  }
+
+  deleteJoueur(id: number): Observable<any> {
+    return this.http.delete(this.userUrl + 'joueur/deleteJoueurByID' + `/${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  public getJoueurById(id: any): Observable<any> {
+    return this.http.get<any>(this.userUrl + 'joueur/displayJoueurByID' + `/${id}`, { headers: this.getAuthHeaders() });
+  }
+
+  updateJoueur(t: FormData): Observable<any> {
+    return this.http.put<any>(this.userUrl + 'joueur/updateNewJoueur', t, { headers: this.getAuthHeaders() });
   }
 }

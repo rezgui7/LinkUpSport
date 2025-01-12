@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 import { ServiceBackService } from '../../service/service-back.service';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-academies',
@@ -20,7 +21,7 @@ import { HttpClientModule } from '@angular/common/http';
     MatSortModule, HttpClientModule,
     MatPaginatorModule ],
   templateUrl: './academies.component.html',
-  providers: [ServiceBackService],
+  providers: [ServiceBackService,AuthService],
   styleUrls: ['./academies.component.css'],
   host: {
     '[attr.ngSkipHydration]': 'true',  // Add ngSkipHydration to the host element

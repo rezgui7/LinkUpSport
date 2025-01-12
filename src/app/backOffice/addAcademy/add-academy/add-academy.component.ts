@@ -8,12 +8,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { FileHandle } from '../../../_model/file-handle.model';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-add-academy',
   standalone: true,
   imports: [HttpClientModule, RouterModule,FormsModule,MatGridListModule,CommonModule ],
-  providers: [ServiceBackService],
+  providers: [ServiceBackService,AuthService],
   styleUrls: ['./add-academy.component.css'],
   templateUrl: './add-academy.component.html',
 })

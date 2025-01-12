@@ -11,6 +11,7 @@ import { Joueur } from '../../../_model/joueur.model';
 import { Platform } from '@angular/cdk/platform';
 import Swal from 'sweetalert2';
 import { FileHandle } from '../../../_model/file-handle.model';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-modif-joueur',
@@ -19,7 +20,7 @@ import { FileHandle } from '../../../_model/file-handle.model';
       FormsModule,MatGridListModule,
       CommonModule,ImageCropperComponent,
       ReactiveFormsModule ],
-    providers: [ServiceBackService],
+    providers: [ServiceBackService,AuthService],
   templateUrl: './modif-joueur.component.html',
   styleUrl: './modif-joueur.component.css'
 })

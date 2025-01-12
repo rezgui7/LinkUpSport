@@ -11,6 +11,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import {  ImageCroppedEvent, LoadedImage, ImageCropperComponent } from 'ngx-image-cropper';
 import { FileHandle } from '../../../_model/file-handle.model';
 import { Platform } from '@angular/cdk/platform';
+import { AuthService } from '../../../frontOffice/service/auth.service';
 
 @Component({
   selector: 'app-add-player',
@@ -19,7 +20,7 @@ import { Platform } from '@angular/cdk/platform';
     FormsModule,MatGridListModule,
     CommonModule,ImageCropperComponent,
     ReactiveFormsModule ],
-  providers: [ServiceBackService],
+  providers: [ServiceBackService,AuthService],
   templateUrl: './add-player.component.html',
   styleUrl: './add-player.component.css'
 })
