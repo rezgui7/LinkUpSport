@@ -47,7 +47,7 @@ export class AddPlayerComponent implements OnInit {
   isBrowser: boolean = false;
 
   constructor(private r: Router, private http: ServiceBackService,
-    private sanitizer: DomSanitizer,private formBuilder: FormBuilder,private platform: Platform) {}
+    private sanitizer: DomSanitizer,private formBuilder: FormBuilder,private platform: Platform,private authservice:AuthService) {}
   
 ngOnInit(): void {
   this.isBrowser = this.platform.isBrowser;
