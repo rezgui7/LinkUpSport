@@ -1,6 +1,11 @@
 mat-grid-tile{
     border: 1px solid #eee; 
 }
+/* This is an optional custom CSS to control the grid on smaller screens */
+.mobile-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
 .btn-remove-image{
     position: absolute;
     cursor: pointer;
