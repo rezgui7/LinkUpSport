@@ -1,0 +1,3 @@
+.mobile-grid {
+    grid-template-columns: 1fr !important;
+  }

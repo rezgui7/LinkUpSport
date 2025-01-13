@@ -27,8 +27,8 @@ export class ServiceBackService {
     return this.http.get<any>(this.userUrl + 'academie/displayAcademie', { headers: this.getAuthHeaders() });
   }
 
-  addAcademie(t: FormData): Observable<Academie> {
-    return this.http.post<Academie>(this.userUrl + 'academie/addNewAcademie', t, { headers: this.getAuthHeaders() });
+  addAcademie(t: FormData): Observable<any> {
+    return this.http.post<any>(this.userUrl + 'academie/addNewAcademie', t, { headers: this.getAuthHeaders() });
   }
 
   deleteAcademie(id: number): Observable<any> {
@@ -39,8 +39,8 @@ export class ServiceBackService {
     return this.http.get<Academie>(this.userUrl + 'academie/displayAcademieByID' + `/${id}`, { headers: this.getAuthHeaders() });
   }
 
-  updateAcademie(t: FormData): Observable<Academie> {
-    return this.http.put<Academie>(this.userUrl + 'academie/updateNewAcademie', t, { headers: this.getAuthHeaders() });
+  updateAcademie(t: FormData): Observable<any> {
+    return this.http.put<any>(this.userUrl + 'academie/updateNewAcademie', t, { headers: this.getAuthHeaders() });
   }
 
   addJoueur(t: FormData): Observable<any> {

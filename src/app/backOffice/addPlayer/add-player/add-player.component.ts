@@ -8,7 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { ServiceBackService } from '../../service/service-back.service';
 import { DomSanitizer } from '@angular/platform-browser';
-import {  ImageCroppedEvent, LoadedImage, ImageCropperComponent } from 'ngx-image-cropper';
+import {  ImageCroppedEvent, LoadedImage, ImageCropperComponent, OutputFormat } from 'ngx-image-cropper';
 import { FileHandle } from '../../../_model/file-handle.model';
 import { Platform } from '@angular/cdk/platform';
 import { AuthService } from '../../../frontOffice/service/auth.service';
@@ -26,6 +26,8 @@ import { AuthService } from '../../../frontOffice/service/auth.service';
 })
 export class AddPlayerComponent implements OnInit {
   email!: string;
+  cropperFormat: OutputFormat = 'png'; // Default format is 'png'
+
   //joueur!: Joueur[];
   joueur: Joueur = {
       id: 0,
@@ -69,32 +71,57 @@ successNotification() {
 
 
 fileChangeEvent(event: any): void {
-  this.imageChangedEvent = event;
+  if (event.target.files && event.target.files.length > 0) {
+    const file = event.target.files[0];
+
+    // Validate file type
+    const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+    if (!validImageTypes.includes(file.type)) {
+      console.error('Unsupported file type:', file.type);
+      alert('Please upload a valid image file (JPEG, PNG, GIF, BMP, WEBP).');
+      return;
+    }
+
+    // Validate file size (optional, e.g., max 5MB)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+      console.error('File is too large:', file.size);
+      alert('File size should not exceed 5MB.');
+      return;
+    }
+
+    // Set the cropper format dynamically
+    this.cropperFormat = file.type === 'image/jpeg' ? 'jpeg' : 'png';
+
+    // Assign the event for the cropper
+    this.imageChangedEvent = event;
+  } else {
+    console.error('No file selected or file list is empty.');
+  }
 }
-imageCropped(event: ImageCroppedEvent) {
-  // Fetch the blob from the URL
-  fetch(event.objectUrl as string)
-  .then(response => response.blob())
-  .then(blob => {
-      // Create a File object from the Blob
-      this.newImage = new File([blob], "croppedImage.png", { type: "image/png" });
 
-      // Optionally, update the croppedImage property for preview
-      this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-            const fileHandle:FileHandle ={
-              file: this.newImage,
-              url: this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob))
-            }
-            this.joueur.images.push(fileHandle);
 
-  })
-  .catch(error => {
-      console.error('Error fetching blob from URL:', error);
-      // Handle the error appropriately
-  });
- }
 
- 
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.objectUrl) {
+      fetch(event.objectUrl as string)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "croppedImage.png", { type: "image/png" });
+          const fileHandle: FileHandle = {
+            file: file,
+            url: this.sanitizer.bypassSecurityTrustUrl(
+              window.URL.createObjectURL(blob)
+            ),
+          };
+  
+          this.joueur.images.push(fileHandle);
+        })
+        .catch((error) => {
+          console.error("Error fetching blob from URL:", error);
+        });
+    }
+  }
  
 imageLoaded(image: LoadedImage) {
   // show cropper
@@ -157,17 +184,38 @@ prepareFormData(joueur:Joueur): FormData{
         
 
 
-          Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
+          
+          if (response.status==201 || response.status==200) {
+  
+  
+            Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
 
-          this.r.navigate(["Verification/"+this.email]);
-
+          this.r.navigate(["admin/Joueurs"]);
+  
+          }
+          else  {
+  
+            Swal.fire('Fail', 'ERREUR !', 'warning');
+  
+          }
         
       },
       (error: any) => {
 
-        
+        if (error.status==201 || error.status==200) {
+  
+  
+          Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
 
-          Swal.fire('Fail', 'Email already exists !', 'warning');
+        this.r.navigate(["admin/Joueurs"]);
+
+        }
+        else  {
+
+          Swal.fire('Fail', 'ERREUR !', 'warning');
+
+        }
+
 
         
 

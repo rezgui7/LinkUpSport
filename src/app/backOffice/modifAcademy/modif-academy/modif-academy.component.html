@@ -3,82 +3,106 @@
 <br>
 <br>
 <br>
-<div class="container mt-5">
-    <div class="card p-2">
-
-        <div class="row">
-            <div class="col-6">
-
-
-                
-                <form #academieForm="ngForm" (ngSubmit)="updateAcademie(academieForm)">
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example1" [(ngModel)]="academie.nom" name="nom" />
-                        <label class="form-label" for="form1Example1">Nom</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example2" [(ngModel)]="academie.nomproprietaire" name="nomproprietaire"/>
-                        <label class="form-label" for="form1Example1">Nom proprietaire</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example3" [(ngModel)]="academie.adresse" name="adresse"/>
-                        <label class="form-label" for="form1Example1">Adresse</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example4" [(ngModel)]="academie.telephone" name="telephone"/>
-                        <label class="form-label" for="form1Example1">Telephone</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                        <input class="form-control" id="form1Example5" [(ngModel)]="academie.email" name="email"/>
-                        <label class="form-label" for="form1Example1">Email</label>
-                    </div>
-                    
-                    
-                    
-
-                    <div align="end">
-                        <button type="button" class="btn btn-outline-dark" (click)="clear(academieForm)">Clear</button>
-                        <button type="submit" class="btn btn-outline-success">Update Course</button>
-                    </div>
-
-                </form>
-
-
+<div class="container my-5">
+    <div class="card p-4 shadow-sm">
+      <div class="row g-4">
+        <!-- Left Column: Form -->
+        <div class="col-12 col-lg-6">
+          <form #academieForm="ngForm" (ngSubmit)="updateAcademie(academieForm)">
+            <div class="form-outline mb-3">
+              <input
+                class="form-control"
+                id="form1Example1"
+                [(ngModel)]="academie.nom"
+                name="nom"
+                required
+              />
+              <label class="form-label" for="form1Example1">Nom</label>
             </div>
-            <div class="col-6">
-                <div>
-                    
-                    <div class="dropzone" appDrag (files)="fileDropped($event)">
-                        <div class="text-wrapper">
-                            <div class="centred">Drag your file or <a class="browse-button" (click)="selectFile.click()">browse</a> a file</div>
-                            
-                        </div>
-                    </div>
-                    <input style="display: none;" type="file" value="select" #selectFile
-                    (change)="onFileSelected($event)">
-                </div>
-                <div class="mt-5">
-                    <div class="row">
-                        <mat-grid-list cols="1" rowHeight="1:1">
-                            <mat-grid-tile *ngFor="let file of academie.images; let i = index;">
-                                <div style="position: relative;">
-                                    <span class="btn-remove-image" (click)="removeImages(i)">x</span>
-                                    <img [src]="file.url" width="100px" height="100px">
-                                </div>
-                            </mat-grid-tile>
-                        </mat-grid-list>
-                    </div>
-                </div>
-                
+            <div class="form-outline mb-3">
+              <input
+                class="form-control"
+                id="form1Example2"
+                [(ngModel)]="academie.nomproprietaire"
+                name="nomproprietaire"
+                required
+              />
+              <label class="form-label" for="form1Example2">Nom Proprietaire</label>
             </div>
-
+            <div class="form-outline mb-3">
+              <input
+                class="form-control"
+                id="form1Example3"
+                [(ngModel)]="academie.adresse"
+                name="adresse"
+                required
+              />
+              <label class="form-label" for="form1Example3">Adresse</label>
+            </div>
+            <div class="form-outline mb-3">
+              <input
+                class="form-control"
+                id="form1Example4"
+                [(ngModel)]="academie.telephone"
+                name="telephone"
+                required
+              />
+              <label class="form-label" for="form1Example4">Telephone</label>
+            </div>
+            <div class="form-outline mb-3">
+              <input
+                class="form-control"
+                id="form1Example5"
+                [(ngModel)]="academie.email"
+                name="email"
+                type="email"
+                required
+              />
+              <label class="form-label" for="form1Example5">Email</label>
+            </div>
+            <div class="d-flex justify-content-between flex-column flex-md-row gap-2">
+              <button type="button" class="btn btn-outline-dark" (click)="clear(academieForm)">Clear</button>
+              <button type="submit" class="btn btn-success">Update Academy</button>
+            </div>
+          </form>
         </div>
-
+  
+        <!-- Right Column: File Dropzone -->
+        <div class="col-12 col-lg-6">
+          <div class="dropzone p-4 text-center border rounded bg-light" appDrag (files)="fileDropped($event)">
+            <p class="m-0">Drag your file or 
+              <a class="text-primary text-decoration-underline" (click)="selectFile.click()">browse</a> a file
+            </p>
+          </div>
+          <input 
+            style="display: none;" 
+            type="file" 
+            #selectFile 
+            (change)="onFileSelected($event)"
+          />
+          <div class="mt-4">
+            <div class="row g-2">
+              <mat-grid-list cols="2" rowHeight="1:1" [ngClass]="{ 'mobile-grid': windowWidth < 576 }">
+                <mat-grid-tile *ngFor="let file of academie.images; let i = index;">
+                  <div class="position-relative">
+                    <button 
+                      type="button" 
+                      class="btn-close position-absolute top-0 end-0" 
+                      aria-label="Remove"
+                      (click)="removeImages(i)">
+                    </button>
+                    <img 
+                      [src]="file.url" 
+                      class="img-fluid rounded" 
+                      style="max-height: 100px;"
+                      alt="Uploaded File">
+                  </div>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+  </div>
+  
