@@ -47,13 +47,16 @@ export class AddPlayerComponent implements OnInit {
   imageChangedEvent: any = '';
   croppedImage: any = '';
   isBrowser: boolean = false;
+  currentUserID!:string;
 
-  constructor(private r: Router, private http: ServiceBackService,
+  constructor(private r: Router, private http: ServiceBackService,private authService: AuthService,
     private sanitizer: DomSanitizer,private formBuilder: FormBuilder,private platform: Platform,private authservice:AuthService) {}
   
 ngOnInit(): void {
+  
   this.isBrowser = this.platform.isBrowser;
 
+  
   this.RegForm = this.formBuilder.group({
     nom: new FormControl(''),
     prenom: new FormControl(''),
@@ -63,7 +66,8 @@ ngOnInit(): void {
   });
 
 
-
+  this.authService.decodeJWT(window.sessionStorage.getItem("auth-token"));
+  this.currentUserID=this.authService.getUser().id;
 }
 successNotification() {
   Swal.fire('Hi', 'Mail verification Sent !', 'success');
@@ -133,98 +137,100 @@ loadImageFailed() {
   // show message
 }
  
-prepareFormData(joueur:Joueur): FormData{
-    const formData =new FormData();
-    formData.append(
-      'joueur',
-      new Blob([JSON.stringify(joueur)],{type: 'application/json'})
-    );
-
-    for (var i= 0;i<joueur.images.length;i++){
+  prepareFormData(joueur:Joueur): FormData{
+      const formData =new FormData();
       formData.append(
-        'file', 
-        joueur.images[i].file,
-        joueur.images[i].file.name
+        'joueur',
+        new Blob([JSON.stringify(joueur)],{type: 'application/json'})
       );
+
+      for (var i= 0;i<joueur.images.length;i++){
+        formData.append(
+          'file', 
+          joueur.images[i].file,
+          joueur.images[i].file.name
+        );
+      }
+
+      formData.append('idAcademyOwner', this.currentUserID.toString());
+
+
+      return formData;
     }
-    return formData;
-  }
-  
-  userCreate() {
-    console.log(this.RegForm)
-
-   if (!this.RegForm.value.nom || !this.RegForm.value.prenom ||
-     !this.RegForm.value.datenaissance || !this.RegForm.value.telephone ||
-     !this.RegForm.value.categorie) {
-
-      Swal.fire('Fail', 'Please fill in all required fields !', 'warning');
-
-
-      return;
-    }
-
-
     
-    if (this.RegForm.value.birthdate>=this.currentDate ) {
-      Swal.fire('Fail', 'unvalid Date', 'warning');
+    userCreate() {
 
-      return;
-    }
+    if (!this.RegForm.value.nom || !this.RegForm.value.prenom ||
+      !this.RegForm.value.datenaissance || !this.RegForm.value.telephone ||
+      !this.RegForm.value.categorie) {
 
-    this.joueur.nom=this.RegForm.value.nom;
-    this.joueur.prenom=this.RegForm.value.prenom;
-    this.joueur.datenaissance=this.RegForm.value.datenaissance;
-    this.joueur.telephone=this.RegForm.value.telephone;
-    this.joueur.categorie=this.RegForm.value.categorie;
-
-    const joueurFormData = this.prepareFormData(this.joueur);
-    console.log(this.joueur);
-
-    this.http.addJoueur(joueurFormData).subscribe((response: HttpResponse<any>) => {
-        
+        Swal.fire('Fail', 'Please fill in all required fields !', 'warning');
 
 
+        return;
+      }
+
+
+      
+      if (this.RegForm.value.birthdate>=this.currentDate ) {
+        Swal.fire('Fail', 'unvalid Date', 'warning');
+
+        return;
+      }
+
+      this.joueur.nom=this.RegForm.value.nom;
+      this.joueur.prenom=this.RegForm.value.prenom;
+      this.joueur.datenaissance=this.RegForm.value.datenaissance;
+      this.joueur.telephone=this.RegForm.value.telephone;
+      this.joueur.categorie=this.RegForm.value.categorie;
+
+      const joueurFormData = this.prepareFormData(this.joueur);
+
+      this.http.addJoueur(joueurFormData).subscribe((response: HttpResponse<any>) => {
           
-          if (response.status==201 || response.status==200) {
-  
-  
+
+
+            
+            if (response.status==201 || response.status==200) {
+    
+    
+              Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
+
+            this.r.navigate(["admin/Joueurs"]);
+    
+            }
+            else  {
+    
+              Swal.fire('Fail', 'ERREUR !', 'warning');
+    
+            }
+          
+        },
+        (error: any) => {
+
+          if (error.status==201 || error.status==200) {
+    
+    
             Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
 
           this.r.navigate(["admin/Joueurs"]);
-  
+
           }
           else  {
-  
+
             Swal.fire('Fail', 'ERREUR !', 'warning');
-  
+
           }
-        
-      },
-      (error: any) => {
-
-        if (error.status==201 || error.status==200) {
-  
-  
-          Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
-
-        this.r.navigate(["admin/Joueurs"]);
-
-        }
-        else  {
-
-          Swal.fire('Fail', 'ERREUR !', 'warning');
-
-        }
 
 
-        
+          
 
-        }
-
-
-    );
+          }
 
 
-  }
+      );
+
+
+    }
 }
 
