@@ -11,6 +11,7 @@ import { LoginComponent } from './frontOffice/auth/login/login/login.component';
 import { RegisterComponent } from './frontOffice/auth/register/register/register.component';
 import { RoleselectionComponent } from './frontOffice/auth/RolesSelection/roleselection/roleselection.component';
 import { AuthGuardService } from './frontOffice/service/auth-guard.service';
+import { OrganisationTournoiComponent } from './backOffice/tournoi/organisation-tournoi/organisation-tournoi.component';
 
 export const routes: Routes = [
     {
@@ -42,6 +43,10 @@ export const routes: Routes = [
             {
                 path:'ModifierJoueur/:id', title: "ModifierJoueur",
                 component:ModifJoueurComponent
+            },
+            {
+                path:'Tournoi', title: "Tournoi",
+                component:OrganisationTournoiComponent
             },
         ]
       },

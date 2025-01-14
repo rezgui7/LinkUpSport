@@ -62,4 +62,7 @@ export class ServiceBackService {
   updateJoueur(t: FormData): Observable<any> {
     return this.http.put<any>(this.userUrl + 'joueur/updateNewJoueur', t, { headers: this.getAuthHeaders() });
   }
+  createTournament(t: FormData): Observable<any> {
+    return this.http.post<any>(this.userUrl + 'tournoi/addNewTournoi', t, { headers: this.getAuthHeaders() });
+  }
 }
