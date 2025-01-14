@@ -54,7 +54,11 @@ export class RegisterComponent implements OnInit {
     this.selectedRole = role;
     this.user.role = role;
   }
-
+  isValidPassword(password: string): boolean {
+    // Doit contenir au moins 8 caractères, avec au moins une lettre et un chiffre
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    return passwordPattern.test(password);
+  }
   isValidEmail(email: string): boolean {
     const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     return emailPattern.test(email);
@@ -72,7 +76,15 @@ export class RegisterComponent implements OnInit {
     }
   
     console.log('User object before API call:', this.user);  // Vérifiez l'objet user avant l'envoi
-  
+    if (!this.isValidPassword(this.user.password)) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Mot de passe invalide',
+        text: 'Le mot de passe doit contenir au moins 8 caractères, incluant des lettres et des chiffres.',
+        confirmButtonText: 'OK',
+      });
+      return;
+    }
     if (!this.isValidEmail(this.user.email)) {
       Swal.fire({
         icon: 'error',

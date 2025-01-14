@@ -11,6 +11,10 @@ import { LoginComponent } from './frontOffice/auth/login/login/login.component';
 import { RegisterComponent } from './frontOffice/auth/register/register/register.component';
 import { RoleselectionComponent } from './frontOffice/auth/RolesSelection/roleselection/roleselection.component';
 import { AuthGuardService } from './frontOffice/service/auth-guard.service';
+import { AddmatchComponent } from './backOffice/match/addmatch/addmatch.component';
+import { UpdatematchComponent } from './backOffice/match/updatematch/updatematch.component';
+import { DisplaymatchComponent } from './backOffice/match/displaymatch/displaymatch.component';
+import { DetailsmatchComponent } from './backOffice/match/detailsmatch/detailsmatch/detailsmatch.component';
 
 export const routes: Routes = [
     {
@@ -43,6 +47,20 @@ export const routes: Routes = [
                 path:'ModifierJoueur/:id', title: "ModifierJoueur",
                 component:ModifJoueurComponent
             },
+            {
+                path: 'AddMatch',
+                component: AddmatchComponent
+            },
+            {
+                path: 'UpdateMatch/:id',
+                title: "ModifierMatch",
+                component: UpdatematchComponent
+            },
+            {
+                path: 'DisplayMatches',
+                component: DisplaymatchComponent
+            },
+            { path: 'details-match/:id', component: DetailsmatchComponent }, 
         ]
       },
       

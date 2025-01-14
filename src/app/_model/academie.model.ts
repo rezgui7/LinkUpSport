@@ -1,5 +1,5 @@
 import { FileHandle } from "./file-handle.model";
-
+import { Joueur } from "./joueur.model";
 export interface Academie {
     id:number,
     nom:string,
@@ -8,6 +8,7 @@ export interface Academie {
     telephone:string,
     email:string,
     images: FileHandle[]
+    Joueur: Joueur[]; 
 
 
 } 

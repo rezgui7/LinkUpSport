@@ -1,0 +1,22 @@
+<h1>Mettre à jour un Match</h1>
+<form [formGroup]="matchForm" (ngSubmit)="updateMatch()">
+  <label for="nbrmitemps">Nombre Mi-Temps:</label>
+  <input id="nbrmitemps" formControlName="nbrmitemps" type="number">
+
+  <label for="duree_mitemps">Durée Mi-Temps:</label>
+  <input id="duree_mitemps" formControlName="duree_mitemps" type="number">
+
+  <label for="datetime">Date et Heure</label>
+    <input
+      id="datetime"
+      type="datetime-local"
+      formControlName="datetime"
+      class="form-control"
+      required
+      
+    />
+  <label for="score">Score:</label>
+  <input id="score" formControlName="score" type="text">
+
+  <button type="submit" [disabled]="matchForm.invalid">Mettre à jour</button>
+</form>

@@ -29,6 +29,7 @@ export class ModifAcademyComponent implements OnInit {
     telephone: '',
     email: '',
     images: [],
+    Joueur:[]
   };
 
   img:FileHandle={
@@ -137,7 +138,8 @@ goToAcademieList(){
     nomproprietaire: data.nomproprietaire,
     telephone: data.telephone,
     email: data.email,
-      images: images
+      images: images,
+      Joueur:[]
     };
   }
 

@@ -34,6 +34,7 @@ export class AddPlayerComponent implements OnInit {
       datenaissance: '',
       telephone: '',
       categorie: '',
+      buts:0,
       images: [],
     };
   //newUser = new Joueur();

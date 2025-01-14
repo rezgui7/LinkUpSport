@@ -50,6 +50,7 @@ export class ModifJoueurComponent implements OnInit{
     datenaissance:"",
     telephone:"",
     categorie:"",
+    buts:0,
     images:[],
     
   }
@@ -90,6 +91,7 @@ export class ModifJoueurComponent implements OnInit{
       datenaissance: data.datenaissance,
       telephone: data.telephone,
       categorie: data.categorie,
+      buts:data.buts,
         images: images
       };
     }

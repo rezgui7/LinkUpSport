@@ -1,0 +1,144 @@
+.match-details {
+  margin: 20px;
+  padding: 25px;
+  border-radius: 8px;
+  background-color: #f4f4f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  .match-header {
+    text-align: center;
+    margin-bottom: 20px;
+
+    p {
+      font-size: 16px;
+      margin: 5px 0;
+    }
+  }
+
+  .match-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    flex-wrap: nowrap; /* Désactive l'ajustement automatique pour que les éléments ne se réorganisent pas sur plusieurs lignes */
+
+    .team {
+      width: 45%;
+      padding: 15px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px; /* Ajoute un espacement vertical entre les équipes */
+
+      h3 {
+        font-size: 18px;
+        text-align: center;
+        margin-bottom: 15px;
+        color: #333;
+      }
+
+      ul {
+        list-style-type: none;
+        padding-left: 0;
+
+        li {
+          font-size: 14px;
+          text-align: center;
+          color: #555;
+          margin: 5px 0;
+        }
+      }
+    }
+
+    .score-section {
+      width: 10%;
+      text-align: center;
+      background-color: #fff;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin: 0 10px;
+
+      h2 {
+        font-size: 36px;
+        margin: 10px 0;
+        color: #333;
+      }
+
+      .timer {
+        font-size: 16px;
+        margin-top: 10px;
+
+        button {
+          margin: 5px;
+          padding: 8px 12px;
+          border: none;
+          border-radius: 4px;
+          background-color: #007bff;
+          color: white;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+
+          &:hover {
+            background-color: #0056b3;
+          }
+        }
+      }
+    }
+  }
+
+  .back-button {
+    display: block;
+    margin: 30px auto 0;
+    padding: 10px 20px;
+    background-color: #ff7043;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #d45c33;
+    }
+  }
+
+  /* Media Queries for responsive design */
+  @media (max-width: 768px) {
+    .match-content {
+      flex-direction: column;
+      align-items: stretch; /* Aligne les éléments en colonne sur les petits écrans */
+
+      .team, .score-section {
+        width: 100%;
+        margin-bottom: 20px; /* Ajoute un espacement vertical */
+      }
+
+      .score-section {
+        width: 100%; /* Prend toute la largeur sur les petits écrans */
+      }
+    }
+
+    .back-button {
+      width: 100%;
+      padding: 12px 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .match-header p {
+      font-size: 14px;
+    }
+
+    .score-section h2 {
+      font-size: 30px;
+    }
+
+    .score-section button {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+  }
+}

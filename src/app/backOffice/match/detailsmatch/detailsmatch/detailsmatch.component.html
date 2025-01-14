@@ -1,0 +1,43 @@
+<h1>Détails du Match</h1>
+<div *ngIf="matchDetails" class="match-details">
+  <div class="match-header">
+    <p><strong>Date:</strong> {{ matchDetails.datetime | date: 'yyyy-MM-dd' }}</p>
+    <p><strong>Heure:</strong> {{ matchDetails.datetime | date: 'HH:mm' }}</p>
+    <p><strong>Nombre de Mi-temps:</strong> {{ matchDetails.nbrmitemps }}</p>
+    <p><strong>Durée Mi-temps:</strong> {{ matchDetails.duree_mitemps }}</p>
+  </div>
+
+  <div class="match-content">
+    <!-- Équipe Gauche -->
+    <div class="team left-team">
+      <h3>{{ matchDetails.academies[0]?.nom }}</h3>
+      <ul>
+        <li *ngFor="let joueur of matchDetails.academies[0]?.joueurs">{{ joueur.nom }}</li>
+      </ul>
+    </div>
+
+    <!-- Score au Centre -->
+    <div class="score-section">
+      <h2>{{ matchDetails.score }}</h2>
+      <div class="timer">
+        <p>Timer: {{ timers[matchDetails.id]?.timer }}</p>
+        <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
+          Start
+        </button>
+        <button class="stop-button" (click)="stopTimer(matchDetails.id)">
+          Stop
+        </button>
+      </div>
+    </div>
+
+    <!-- Équipe Droite -->
+    <div class="team right-team">
+      <h3>{{ matchDetails.academies[1]?.nom }}</h3>
+      <ul>
+        <li *ngFor="let joueur of matchDetails.academies[1]?.joueurs">{{ joueur.nom }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
+</div>

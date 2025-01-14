@@ -29,6 +29,7 @@ export class AddAcademyComponent {
     telephone: '',
     email: '',
     images: [],
+    Joueur:[],
   };
   constructor(private r: Router, private http: ServiceBackService,private sanitizer: DomSanitizer) {}
   

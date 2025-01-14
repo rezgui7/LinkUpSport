@@ -1,0 +1,152 @@
+/* Style global */
+h1 {
+    text-align: center;
+    color: #4caf50;
+  }
+  
+  .match-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .match-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .match-header {
+    background-color: #f4f4f4;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .match-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .academie {
+    width: 40%;
+    text-align: center;
+  }
+  
+  .academie-image-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .academie-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #4caf50;
+  }
+  
+  .score-section {
+    text-align: center;
+    background-color: #000000; /* Remplacer #4caf50 (vert) par #000000 (noir) */
+    color: white;
+    padding: 10px;
+    border-radius: 10px;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  
+  .score-section h2 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  .match-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+  }
+  
+  /* Séparation des boutons Start/Stop des autres boutons */
+  .timer-display {
+    flex: 1;
+  }
+  
+  .buttons-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  /* Boutons Start et Stop */
+  .start-button,
+  .stop-button {
+    background-color: #007bff; /* Bleu professionnel */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+  }
+  
+  .start-button:hover,
+  .stop-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  
+  .stop-button {
+    background-color: #dc3545; /* Rouge professionnel */
+  }
+  
+  .stop-button:hover {
+    background-color: #c82333;
+  }
+  
+  /* Icone boutons Modifier et Supprimer */
+  .icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .icon-button:hover {
+    transform: scale(1.1);
+  }
+  
+  .edit-button i {
+    color: #f39c12; /* Couleur orange pour le stylo */
+    font-size: 18px;
+  }
+  
+  .delete-button i {
+    color: #e74c3c; /* Couleur rouge pour la corbeille */
+    font-size: 18px;
+  }
+  
+  

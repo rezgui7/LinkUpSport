@@ -7,6 +7,7 @@ export interface Joueur {
     datenaissance:string,
     telephone:string,
     categorie:string,
+    buts:number,
     images: FileHandle[]
 
 

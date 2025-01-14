@@ -1,0 +1,41 @@
+<h1>Liste des Matchs</h1>
+
+<div class="match-container">
+  <div class="match-card" *ngFor="let match of matches">
+    <div class="match-header">
+      <p>
+        <strong>Date:</strong> {{ match.datetime | date: 'yyyy-MM-dd' }}
+        <strong>Time:</strong> {{ match.datetime | date: 'HH:mm' }}
+      </p>
+      
+    </div>
+
+    <div class="match-content">
+      <div class="academie academie-left">
+        <h4>{{ match.academies[0]?.nom }}</h4>
+        
+      </div>
+
+      <div class="score-section">
+        <h2>{{ match.score }}</h2>
+      </div>
+
+      <div class="academie academie-right">
+        <h4>{{ match.academies[1]?.nom }}</h4>
+        
+      </div>
+    </div>
+
+    <div class="match-footer">
+      
+      
+      <button class="icon-button edit-button" (click)="navigateToUpdateMatch(match.id)">
+        <i class="fas fa-pen"></i>
+      </button>
+      <button class="icon-button delete-button" (click)="deleteMatch(match.id)">
+        <i class="fas fa-trash"></i>
+      </button>
+      <a [routerLink]="['/admin/details-match', match.id]">View Details</a>
+    </div>
+  </div>
+</div>

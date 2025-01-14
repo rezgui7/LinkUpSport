@@ -62,4 +62,8 @@ export class ServiceBackService {
   updateJoueur(t: FormData): Observable<any> {
     return this.http.put<any>(this.userUrl + 'joueur/updateNewJoueur', t, { headers: this.getAuthHeaders() });
   }
+  getJoueursByAcademie(academieId: number): Observable<Joueur[]> {
+    return this.http.get<Joueur[]>(this.userUrl + `academie/${academieId}/joueurs`, { headers: this.getAuthHeaders() });
+  }
+  
 }
