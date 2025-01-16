@@ -104,6 +104,48 @@
       background-color: #d45c33;
     }
   }
+  .goal-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .modal-actions button {
+    margin: 5px;
+  }
+  
+  .goal-section button {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .goal-section button i {
+    font-size: 1.2em;
+  }
+  
+  .goal-section button:hover {
+    background: #45a049;
+  }
+  
 
   /* Media Queries for responsive design */
   @media (max-width: 768px) {

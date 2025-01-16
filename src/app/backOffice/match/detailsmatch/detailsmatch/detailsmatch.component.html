@@ -38,6 +38,50 @@
       </ul>
     </div>
   </div>
+  <div class="score-section">
+    <h2>{{ matchDetails.score }}</h2>
+    <div class="timer">
+      <p>Timer: {{ timers[matchDetails.id]?.timer }}</p>
+      <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
+        Start
+      </button>
+      <button class="stop-button" (click)="stopTimer(matchDetails.id)">
+        Stop
+      </button>
+    </div>
+    <div class="goal-section">
+      <button (click)="openGoalModal(matchDetails.id)">
+        <i class="fas fa-futbol"></i> Ajouter un but
+      </button>
+    </div>
+  </div>
+  
+  <!-- Modal pour ajouter un but -->
+  <div *ngIf="isGoalModalOpen" class="goal-modal">
+    <div class="modal-content">
+      <h3>Ajouter un But</h3>
+      <label for="academy">Académie :</label>
+      <select id="academy" [(ngModel)]="selectedAcademieId" (ngModelChange)="onAcademyChange($event)">
+        <option *ngFor="let academy of matchDetails.academies" [value]="academy.id">
+          {{ academy.nom }}
+        </option>
+      </select>
+      
+  
+      <label for="joueur">Joueur :</label>
+      <select id="joueur" [(ngModel)]="selectedJoueurId">
+        <option *ngFor="let joueur of joueurs" [value]="joueur.id">
+          {{ joueur.nom }}
+        </option>
+      </select>
+  
+      <div class="modal-actions">
+        <button (click)="addGoal(matchDetails.id)">Valider</button>
+        <button (click)="closeGoalModal()">Annuler</button>
+      </div>
+    </div>
+  </div>
+  
 
   <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
 </div>
