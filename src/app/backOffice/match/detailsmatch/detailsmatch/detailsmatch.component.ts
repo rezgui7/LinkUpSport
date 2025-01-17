@@ -36,6 +36,9 @@ export class DetailsmatchComponent implements OnInit {
   filteredJoueurs: any[] = [];
   butsMarques: { joueur: Joueur; temps: string }[] = [];
 
+cartons: { joueur: Joueur; couleur: string; temps: string }[] = [];
+  selectedCartonColor: string = '';
+  isCartonModalOpen: boolean = false;
   constructor(
     private matchService: ServiceFrontService,
     private router: Router,
@@ -50,7 +53,33 @@ export class DetailsmatchComponent implements OnInit {
     // Charger les buts marqués depuis localStorage pour ce match spécifique
     this.loadButsFromLocalStorage();
   }
-
+  openCartonModal(): void {
+    this.isCartonModalOpen = true;
+  }
+  closeCartonModal(): void {
+    this.isCartonModalOpen = false;
+    this.selectedAcademieId = null;
+    this.selectedJoueurId = null;
+    this.selectedCartonColor = '';
+  }
+  addCarton(): void {
+    if (this.selectedAcademieId && this.selectedJoueurId && this.selectedCartonColor && this.matchId) {
+      // Appeler le service pour ajouter un carton
+      this.matchService.addCarton(this.matchId, this.selectedAcademieId, this.selectedJoueurId, this.selectedCartonColor).subscribe({
+        next: (updatedMatch) => {
+          Swal.fire('Succès', `Carton ${this.selectedCartonColor} ajouté avec succès.`, 'success');
+          this.loadMatchDetails(); // Recharger les détails du match
+          this.closeCartonModal();
+        },
+        error: (error) => {
+          console.error('Erreur lors de l\'ajout du carton:', error);
+          Swal.fire('Erreur', 'Une erreur est survenue lors de l\'ajout du carton.', 'error');
+        },
+      });
+    } else {
+      Swal.fire('Attention', 'Veuillez sélectionner une académie, un joueur et la couleur du carton.', 'warning');
+    }
+  }
   loadButsFromLocalStorage(): void {
     if (this.matchId !== null) {
       const storedButs = localStorage.getItem(`butsMarques_${this.matchId}`);

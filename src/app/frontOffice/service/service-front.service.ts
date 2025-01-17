@@ -70,5 +70,25 @@ getAcademyById(matchId: number, academieId: number): Observable<Academie | null>
   const headers = this.getAuthHeaders();
   return this.http.get<Academie | null>(`${this.userUrl}/${matchId}/academie/${academieId}`, { headers });
 }
+// Ajouter cette méthode dans votre ServiceFrontService
+// service-back.service.ts
+addCarton(matchId: number, academieId: number, joueurId: number, couleurCarton: string): Observable<match> {
+  const headers = this.getAuthHeaders();
+
+  // Construire les paramètres de la requête
+  const params = new URLSearchParams();
+  params.append('academieId', academieId.toString());
+  params.append('joueurId', joueurId.toString());
+  params.append('couleurCarton', couleurCarton);
+
+  // Appeler l'API backend pour ajouter un carton
+  return this.http.put<match>(
+    `${this.userUrl}/addCarton/${matchId}?${params.toString()}`,
+    {},
+    { headers }
+  );
+}
+
+
  
 }

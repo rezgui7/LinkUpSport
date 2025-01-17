@@ -92,7 +92,59 @@
       </tbody>
     </table>
   </div>
+   <!-- Liste des Cartons -->
+   <div class="cartons">
+    <h3>cartons</h3>
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let carton of cartons">
+          <td>⚽{{ carton.temps }} |</td>
+          <td> {{ carton.joueur.nom }}</td>
+         
+        </tr>
+      </tbody>
+    </table>
+  </div>
   
+  
+  <!-- Ajouter un bouton pour l'ajout du carton -->
+  <button (click)="openCartonModal()">Ajouter Carton</button>
 
+  <!-- Modal ou formulaire pour ajouter un carton -->
+  <div *ngIf="isCartonModalOpen" class="goal-modal">
+    <div class="modal-content">
+      <h3>Ajouter un Carton</h3>
+
+      <label for="academy">Académie :</label>
+      <select id="academy" [(ngModel)]="selectedAcademieId" (ngModelChange)="onAcademyChange($event)">
+        <option *ngFor="let academy of matchDetails.academies" [value]="academy.id">
+          {{ academy.nom }}
+        </option>
+      </select>
+
+      <label for="joueur">Joueur :</label>
+      <select id="joueur" [(ngModel)]="selectedJoueurId">
+        <option *ngFor="let joueur of joueurs" [value]="joueur.id">{{ joueur.nom }}</option>
+      </select>
+
+      <label for="carton">Couleur du Carton :</label>
+      <select [(ngModel)]="selectedCartonColor">
+        <option value="jaune">Carton Jaune</option>
+        <option value="rouge">Carton Rouge</option>
+      </select>
+
+      <div class="modal-actions">
+        <button (click)="addCarton()">Ajouter le Carton</button>
+        <button (click)="closeCartonModal()">Annuler</button>
+      </div>
+    </div>
+  </div>
+ 
   <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
 </div>
