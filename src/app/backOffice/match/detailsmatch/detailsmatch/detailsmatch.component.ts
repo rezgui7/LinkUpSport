@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-import { CommonModule, } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
-import { ActivatedRoute, Router ,RouterModule} from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ServiceFrontService } from '../../../../frontOffice/service/service-front.service';
 import { ServiceBackService } from '../../../service/service-back.service';
@@ -15,157 +14,151 @@ import { AuthService } from '../../../../frontOffice/service/auth.service';
 @Component({
   selector: 'app-detailsmatch',
   standalone: true,
-  imports: [CommonModule, HttpClientModule,RouterModule,FormsModule],
-    providers: [ServiceFrontService, AuthService, ServiceBackService],
+  imports: [CommonModule, HttpClientModule, RouterModule, FormsModule],
+  providers: [ServiceFrontService, AuthService, ServiceBackService],
   templateUrl: './detailsmatch.component.html',
-  styleUrl: './detailsmatch.component.css'
+  styleUrls: ['./detailsmatch.component.css'],
 })
-export class DetailsmatchComponent implements OnInit{
+export class DetailsmatchComponent implements OnInit {
   matches: match[] = [];
-    joueurs: Joueur[] = [];
-    academies: Academie[] = [];
-    timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
-    selectedAcademieId: number | null = null;
-    selectedJoueur: Joueur | null = null;
-    selectedAcademie: Academie | null = null;
-    selectedMatch: match | null = null;  // Track the currently selected match for goal button
-    selectedMatchId: number | null = null;
-    selectedJoueurId: number | null = null;
-    isGoalModalOpen: boolean = false;
-    matchId: number | null = null;
-    matchDetails: match | null = null;
-    filteredJoueurs: any[] = [];
-    butsMarques: { joueur: Joueur; temps: string }[] = [];
+  joueurs: Joueur[] = [];
+  academies: Academie[] = [];
+  timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
+  selectedAcademieId: number | null = null;
+  selectedJoueur: Joueur | null = null;
+  selectedAcademie: Academie | null = null;
+  selectedMatch: match | null = null;
+  selectedMatchId: number | null = null;
+  selectedJoueurId: number | null = null;
+  isGoalModalOpen: boolean = false;
+  matchId: number | null = null;
+  matchDetails: match | null = null;
+  filteredJoueurs: any[] = [];
+  butsMarques: { joueur: Joueur; temps: string }[] = [];
 
   constructor(
-      private matchService: ServiceFrontService,
-      private router: Router,
-      private serviceBackService: ServiceBackService,
-      private route: ActivatedRoute,
-    ) {}
-    ngOnInit(): void {
-      this.matchId = +this.route.snapshot.paramMap.get('id')!;
-      this.loadMatchDetails();
-    }
-    
-    openGoalModal(matchId: number): void {
-      this.isGoalModalOpen = true;
-      this.selectedMatchId = matchId;
-      this.joueurs = []; // Réinitialiser les joueurs
-    }
-    onAcademyChange(academieId: number): void {
-      this.selectedAcademieId = academieId;
-      this.joueurs = []; // Réinitialiser les joueurs avant de charger de nouveaux joueurs
-      this.getJoueursParAcademie(academieId); // Charger les joueurs pour l'académie sélectionnée
-    }
-    addGoal(matchId: number): void {
-      if (this.selectedAcademieId && this.selectedJoueurId && this.selectedMatchId) {
-        console.log('Joueurs disponibles:', this.joueurs);
-        console.log('ID Joueur sélectionné:', this.selectedJoueurId);
-    
-        const currentTimer = this.timers[this.selectedMatchId]?.timer || '00:00';
-        const joueur = this.joueurs.find(j => j.id === Number(this.selectedJoueurId));
-    
-        if (joueur) {
-          this.matchService
-            .updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId)
-            .subscribe({
-              next: () => {
-                // Ajouter le but marqué
-                this.butsMarques.push({ joueur, temps: currentTimer });
-    
-                Swal.fire('Succès', 'Le score a été mis à jour avec succès.', 'success');
-                this.loadMatchDetails(); // Recharger les détails du match
-                this.closeGoalModal();
-              },
-              error: (error) => {
-                console.error('Erreur lors de la mise à jour du score:', error);
-                Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour du score.', 'error');
-              },
-            });
-        } else {
-          console.error('Erreur: Joueur non trouvé avec l\'ID:', this.selectedJoueurId);
-          Swal.fire('Erreur', 'Le joueur sélectionné est introuvable.', 'error');
-        }
-      } else {
-        Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
+    private matchService: ServiceFrontService,
+    private router: Router,
+    private serviceBackService: ServiceBackService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.matchId = +this.route.snapshot.paramMap.get('id')!;
+    this.loadMatchDetails();
+
+    // Charger les buts marqués depuis localStorage pour ce match spécifique
+    this.loadButsFromLocalStorage();
+  }
+
+  loadButsFromLocalStorage(): void {
+    if (this.matchId !== null) {
+      const storedButs = localStorage.getItem(`butsMarques_${this.matchId}`);
+      if (storedButs) {
+        this.butsMarques = JSON.parse(storedButs);
       }
     }
-    
-    
-    
-    closeGoalModal(): void {
-      this.isGoalModalOpen = false;
-      this.selectedAcademieId = null;
-      this.selectedJoueurId = null;
-    }
-    
-    
-    loadMatchDetails(): void {
-      if (this.matchId) {
-        this.matchService.getMatchById(this.matchId).subscribe({
-          next: (match) => {
-            this.matchDetails = match;
-            console.log('Match récupéré:', this.matchDetails);
-    
-            // Initialiser le timer pour le match
-            this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
-    
-            // Charger les joueurs pour chaque académie du match
-            match.academies.forEach((academy) => {
-              console.log('Academie:', academy); // Vérifier les académies
-              this.getJoueursParAcademie(academy.id);
-            });
+  }
+
+  openGoalModal(matchId: number): void {
+    this.isGoalModalOpen = true;
+    this.selectedMatchId = matchId;
+    this.joueurs = []; // Réinitialiser les joueurs
+  }
+
+  onAcademyChange(academieId: number): void {
+    this.selectedAcademieId = academieId;
+    this.joueurs = []; // Réinitialiser les joueurs avant de charger de nouveaux joueurs
+    this.getJoueursParAcademie(academieId); // Charger les joueurs pour l'académie sélectionnée
+  }
+
+  addGoal(matchId: number): void {
+    if (this.selectedAcademieId && this.selectedJoueurId && this.selectedMatchId) {
+      const currentTimer = this.timers[this.selectedMatchId]?.timer || '00:00';
+      const joueur = this.joueurs.find(j => j.id === Number(this.selectedJoueurId));
+
+      if (joueur) {
+        this.matchService.updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId).subscribe({
+          next: () => {
+            // Ajouter le but marqué
+            this.butsMarques.push({ joueur, temps: currentTimer });
+
+            // Sauvegarder les buts marqués dans localStorage pour ce match spécifique
+            if (this.matchId !== null) {
+              localStorage.setItem(`butsMarques_${this.matchId}`, JSON.stringify(this.butsMarques));
+            }
+
+            Swal.fire('Succès', 'Le score a été mis à jour avec succès.', 'success');
+            this.loadMatchDetails(); // Recharger les détails du match
+            this.closeGoalModal();
           },
           error: (error) => {
-            console.error('Erreur lors de la récupération des détails du match:', error);
-            Swal.fire({
-              icon: 'error',
-              title: 'Erreur',
-              text: 'Un problème est survenu lors de la récupération des détails du match.',
-            });
-          },
+            console.error('Erreur lors de la mise à jour du score:', error);
+            Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour du score.', 'error');
+          }
         });
       } else {
-        console.warn('Aucun matchId spécifié pour charger les détails du match.');
+        console.error('Erreur: Joueur non trouvé avec l\'ID:', this.selectedJoueurId);
+        Swal.fire('Erreur', 'Le joueur sélectionné est introuvable.', 'error');
       }
+    } else {
+      Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
     }
-    
-    
-    getJoueursParAcademie(academieId: number): void {
-      this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
-        next: (data: Joueur[]) => {
-          // Ajouter les joueurs à la liste globale des joueurs
-          this.joueurs = [...this.joueurs, ...data];
-          const academy = this.academies.find((a) => a.id === academieId);
-          if (academy) {
-            academy.Joueur = data; // Met à jour l'académie avec les joueurs
-          }
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération des joueurs:', error);
-        },
-      });
-    }
-    
-    getacademiebymatch(matchId: number, academieId: number): void {
-      this.matchService.getAcademyById(matchId, academieId).subscribe({
-        next: (data: Academie | null) => {
-          if (data && data.Joueur) {
-            this.joueurs = data.Joueur; // Met à jour la liste des joueurs pour cette académie
-            console.log('Joueurs récupérés:', this.joueurs);
-          } else {
-            console.log('Aucune académie ou joueurs trouvés pour cet ID.');
-          }
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération des joueurs:', error);
-        },
-      });
-    }
-    
+  }
 
- startTimer(matchId: number, duration: number): void {
+  closeGoalModal(): void {
+    this.isGoalModalOpen = false;
+    this.selectedAcademieId = null;
+    this.selectedJoueurId = null;
+  }
+
+  loadMatchDetails(): void {
+    if (this.matchId) {
+      this.matchService.getMatchById(this.matchId).subscribe({
+        next: (match) => {
+          this.matchDetails = match;
+          console.log('Match récupéré:', this.matchDetails);
+
+          // Initialiser le timer pour le match
+          this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
+
+          // Charger les joueurs pour chaque académie du match
+          match.academies.forEach((academy) => {
+            console.log('Academie:', academy); // Vérifier les académies
+            this.getJoueursParAcademie(academy.id);
+          });
+        },
+        error: (error) => {
+          console.error('Erreur lors de la récupération des détails du match:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: 'Un problème est survenu lors de la récupération des détails du match.',
+          });
+        },
+      });
+    } else {
+      console.warn('Aucun matchId spécifié pour charger les détails du match.');
+    }
+  }
+
+  getJoueursParAcademie(academieId: number): void {
+    this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
+      next: (data: Joueur[]) => {
+        // Ajouter les joueurs à la liste globale des joueurs
+        this.joueurs = [...this.joueurs, ...data];
+        const academy = this.academies.find((a) => a.id === academieId);
+        if (academy) {
+          academy.Joueur = data; // Met à jour l'académie avec les joueurs
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des joueurs:', error);
+      },
+    });
+  }
+
+  startTimer(matchId: number, duration: number): void {
     const remainingTime = this.timers[matchId].remainingTime || 0;
     if (this.timers[matchId]?.intervalId) {
       clearInterval(this.timers[matchId].intervalId);
@@ -201,23 +194,23 @@ export class DetailsmatchComponent implements OnInit{
   formatTime(value: number): string {
     return value < 10 ? `0${value}` : `${value}`;
   }
+
   updateScore(matchId: number): void {
-      if (this.selectedAcademieId && this.selectedJoueurId) {
-        this.matchService
-          .updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId)
-          .subscribe({
-            next: (updatedMatch) => {
-              Swal.fire('Succès', 'Le score a été mis à jour.', 'success');
-              this.loadMatchDetails(); // Recharger les matchs pour refléter les modifications
-            },
-            error: (error) => {
-              console.error('Erreur lors de la mise à jour du score:', error);
-              Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
-            },
-          });
-       
-      } else {
-        Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
-      }
+    if (this.selectedAcademieId && this.selectedJoueurId) {
+      this.matchService
+        .updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId)
+        .subscribe({
+          next: (updatedMatch) => {
+            Swal.fire('Succès', 'Le score a été mis à jour.', 'success');
+            this.loadMatchDetails(); // Recharger les matchs pour refléter les modifications
+          },
+          error: (error) => {
+            console.error('Erreur lors de la mise à jour du score:', error);
+            Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+          },
+        });
+    } else {
+      Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
     }
+  }
 }

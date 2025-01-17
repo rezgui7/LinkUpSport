@@ -12,7 +12,7 @@
     <div class="team left-team">
       <h3>{{ matchDetails.academies[0]?.nom }}</h3>
       <ul>
-        <li *ngFor="let joueur of matchDetails.academies[0]?.joueurs">{{ joueur.nom }}</li>
+        <li *ngFor="let joueur of matchDetails.academies[0]?.joueurs"></li>
       </ul>
     </div>
 
@@ -29,7 +29,7 @@
     <div class="team right-team">
       <h3>{{ matchDetails.academies[1]?.nom }}</h3>
       <ul>
-        <li *ngFor="let joueur of matchDetails.academies[1]?.joueurs">{{ joueur.nom }}</li>
+        <li *ngFor="let joueur of matchDetails.academies[1]?.joueurs"></li>
       </ul>
     </div>
   </div>
@@ -85,8 +85,9 @@
       </thead>
       <tbody>
         <tr *ngFor="let but of butsMarques">
-          <td>⚽{{ but.joueur.nom }}</td>
-          <td>{{ but.temps }}</td>
+          <td>⚽{{ but.temps }} |</td>
+          <td> {{ but.joueur.nom }}</td>
+         
         </tr>
       </tbody>
     </table>
