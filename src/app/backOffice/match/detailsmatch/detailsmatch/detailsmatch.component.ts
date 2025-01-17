@@ -35,6 +35,8 @@ export class DetailsmatchComponent implements OnInit{
     matchId: number | null = null;
     matchDetails: match | null = null;
     filteredJoueurs: any[] = [];
+    butsMarques: { joueur: Joueur; temps: string }[] = [];
+
   constructor(
       private matchService: ServiceFrontService,
       private router: Router,
@@ -56,6 +58,40 @@ export class DetailsmatchComponent implements OnInit{
       this.joueurs = []; // Réinitialiser les joueurs avant de charger de nouveaux joueurs
       this.getJoueursParAcademie(academieId); // Charger les joueurs pour l'académie sélectionnée
     }
+    addGoal(matchId: number): void {
+      if (this.selectedAcademieId && this.selectedJoueurId && this.selectedMatchId) {
+        console.log('Joueurs disponibles:', this.joueurs);
+        console.log('ID Joueur sélectionné:', this.selectedJoueurId);
+    
+        const currentTimer = this.timers[this.selectedMatchId]?.timer || '00:00';
+        const joueur = this.joueurs.find(j => j.id === Number(this.selectedJoueurId));
+    
+        if (joueur) {
+          this.matchService
+            .updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId)
+            .subscribe({
+              next: () => {
+                // Ajouter le but marqué
+                this.butsMarques.push({ joueur, temps: currentTimer });
+    
+                Swal.fire('Succès', 'Le score a été mis à jour avec succès.', 'success');
+                this.loadMatchDetails(); // Recharger les détails du match
+                this.closeGoalModal();
+              },
+              error: (error) => {
+                console.error('Erreur lors de la mise à jour du score:', error);
+                Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour du score.', 'error');
+              },
+            });
+        } else {
+          console.error('Erreur: Joueur non trouvé avec l\'ID:', this.selectedJoueurId);
+          Swal.fire('Erreur', 'Le joueur sélectionné est introuvable.', 'error');
+        }
+      } else {
+        Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
+      }
+    }
+    
     
     
     closeGoalModal(): void {
@@ -64,25 +100,7 @@ export class DetailsmatchComponent implements OnInit{
       this.selectedJoueurId = null;
     }
     
-    addGoal(matchId: number): void {
-      if (this.selectedAcademieId && this.selectedJoueurId) {
-        this.matchService
-          .updateMatchScore(matchId, this.selectedAcademieId, this.selectedJoueurId)
-          .subscribe({
-            next: () => {
-              Swal.fire('Succès', 'Le score a été mis à jour avec succès.', 'success');
-              this.loadMatchDetails(); // Met à jour les détails du match
-              this.closeGoalModal(); // Ferme le modal
-            },
-            error: (error) => {
-              console.error('Erreur lors de la mise à jour du score:', error);
-              Swal.fire('Erreur', 'Une erreur est survenue lors de la mise à jour du score.', 'error');
-            },
-          });
-      } else {
-        Swal.fire('Attention', 'Veuillez sélectionner une académie et un joueur.', 'warning');
-      }
-    }
+    
     loadMatchDetails(): void {
       if (this.matchId) {
         this.matchService.getMatchById(this.matchId).subscribe({
