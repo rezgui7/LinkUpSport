@@ -14,7 +14,7 @@ import { AuthService } from '../../../../frontOffice/service/auth.service';
 @Component({
   selector: 'app-detailsmatch',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, RouterModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, RouterModule, FormsModule,],
   providers: [ServiceFrontService, AuthService, ServiceBackService],
   templateUrl: './detailsmatch.component.html',
   styleUrls: ['./detailsmatch.component.css'],
@@ -35,24 +35,73 @@ export class DetailsmatchComponent implements OnInit {
   matchDetails: match | null = null;
   filteredJoueurs: any[] = [];
   butsMarques: { joueur: Joueur; temps: string }[] = [];
-
-cartons: { joueur: Joueur; couleur: string; temps: string }[] = [];
+  joueursAvecCartons: { joueur: Joueur; temps: string }[] = [];
   selectedCartonColor: string = '';
+
+
   isCartonModalOpen: boolean = false;
   constructor(
     private matchService: ServiceFrontService,
     private router: Router,
     private serviceBackService: ServiceBackService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+
   ) {}
 
   ngOnInit(): void {
     this.matchId = +this.route.snapshot.paramMap.get('id')!;
     this.loadMatchDetails();
-
-    // Charger les buts marqués depuis localStorage pour ce match spécifique
-    this.loadButsFromLocalStorage();
+    
+   
   }
+  
+  loadMatchDetails(): void {
+    if (this.matchId) {
+      this.matchService.getMatchById(this.matchId).subscribe({
+        next: (match) => {
+          this.matchDetails = match;
+          console.log('Match récupéré:', this.matchDetails);
+  
+          this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
+  
+          // Charger les joueurs par académie
+          match.academies.forEach((academy) => {
+            this.getJoueursParAcademie(academy.id);
+          });
+  
+          // Charger les buts marqués depuis le localStorage
+          const butsMarques = JSON.parse(localStorage.getItem(`butsMarques_${this.matchId}`) || '[]');
+          this.butsMarques = butsMarques;
+  
+          // Charger les joueurs avec cartons depuis le localStorage
+          const joueursAvecCartons = JSON.parse(localStorage.getItem(`joueursAvecCartons_${this.matchId}`) || '[]');
+          this.joueursAvecCartons = joueursAvecCartons;
+  
+          console.log('Joueurs avec cartons récupérés:', this.joueursAvecCartons);
+  
+          // Filtrer les joueurs avec cartons
+          this.filteredJoueurs = this.joueursAvecCartons.map(carton => ({
+            ...carton.joueur,
+            tempsCarton: carton.temps, // Ajout du temps du carton
+          }));
+  
+          console.log('Joueurs filtrés avec cartons:', this.filteredJoueurs);
+        },
+        error: (error) => {
+          console.error('Erreur lors de la récupération des détails du match:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Erreur',
+            text: 'Un problème est survenu lors de la récupération des détails du match.',
+          });
+        },
+      });
+    }
+  }
+  
+  
+  
+  
   openCartonModal(): void {
     this.isCartonModalOpen = true;
   }
@@ -64,11 +113,23 @@ cartons: { joueur: Joueur; couleur: string; temps: string }[] = [];
   }
   addCarton(): void {
     if (this.selectedAcademieId && this.selectedJoueurId && this.selectedCartonColor && this.matchId) {
-      // Appeler le service pour ajouter un carton
+      const currentTimer = this.timers[this.matchId]?.timer || '00:00';  // Obtenez le temps actuel du timer
       this.matchService.addCarton(this.matchId, this.selectedAcademieId, this.selectedJoueurId, this.selectedCartonColor).subscribe({
-        next: (updatedMatch) => {
+        next: () => {
+          const joueur = this.joueurs.find(j => j.id === this.selectedJoueurId);
+          if (joueur) {
+            // Récupérer ou initialiser les cartons du joueur
+            let cartonsJoueur = JSON.parse(localStorage.getItem(`cartons_${joueur.id}_${this.matchId}`) || '[]');
+            // Ajouter un objet avec la couleur du carton et le temps
+            cartonsJoueur.push({ couleur: this.selectedCartonColor, temps: currentTimer });
+            localStorage.setItem(`cartons_${joueur.id}_${this.matchId}`, JSON.stringify(cartonsJoueur));
+    
+            // Ajouter à joueursAvecCartons avec le temps et la couleur
+            this.joueursAvecCartons.push({ joueur, temps: currentTimer });
+            localStorage.setItem(`joueursAvecCartons_${this.matchId}`, JSON.stringify(this.joueursAvecCartons));  // Sauvegarder dans le localStorage
+          }
           Swal.fire('Succès', `Carton ${this.selectedCartonColor} ajouté avec succès.`, 'success');
-          this.loadMatchDetails(); // Recharger les détails du match
+          this.loadMatchDetails();  // Recharger les détails du match et les joueurs filtrés
           this.closeCartonModal();
         },
         error: (error) => {
@@ -80,11 +141,38 @@ cartons: { joueur: Joueur; couleur: string; temps: string }[] = [];
       Swal.fire('Attention', 'Veuillez sélectionner une académie, un joueur et la couleur du carton.', 'warning');
     }
   }
+  
+  
+  getJoueursParAcademie(academieId: number): void {
+    this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
+      next: (data: Joueur[]) => {
+        if (data && data.length > 0) {
+          const nouveauxJoueurs = data.filter(newJoueur =>
+            !this.joueurs.some(j => j.id === newJoueur.id)
+          );
+          this.joueurs = [...this.joueurs, ...nouveauxJoueurs];
+  
+          const academy = this.academies.find(a => a.id === academieId);
+          if (academy) {
+            academy.Joueur = data; // Mise à jour de l'académie
+          }
+        } else {
+          console.warn(`Aucun joueur trouvé pour l'académie ${academieId}`);
+        }
+      },
+      error: (error) => {
+        console.error('Erreur lors de la récupération des joueurs:', error);
+      },
+    });
+  }
+
+  
   loadButsFromLocalStorage(): void {
     if (this.matchId !== null) {
       const storedButs = localStorage.getItem(`butsMarques_${this.matchId}`);
       if (storedButs) {
         this.butsMarques = JSON.parse(storedButs);
+       
       }
     }
   }
@@ -141,52 +229,8 @@ cartons: { joueur: Joueur; couleur: string; temps: string }[] = [];
     this.selectedJoueurId = null;
   }
 
-  loadMatchDetails(): void {
-    if (this.matchId) {
-      this.matchService.getMatchById(this.matchId).subscribe({
-        next: (match) => {
-          this.matchDetails = match;
-          console.log('Match récupéré:', this.matchDetails);
-
-          // Initialiser le timer pour le match
-          this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
-
-          // Charger les joueurs pour chaque académie du match
-          match.academies.forEach((academy) => {
-            console.log('Academie:', academy); // Vérifier les académies
-            this.getJoueursParAcademie(academy.id);
-          });
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération des détails du match:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: 'Un problème est survenu lors de la récupération des détails du match.',
-          });
-        },
-      });
-    } else {
-      console.warn('Aucun matchId spécifié pour charger les détails du match.');
-    }
-  }
-
-  getJoueursParAcademie(academieId: number): void {
-    this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
-      next: (data: Joueur[]) => {
-        // Ajouter les joueurs à la liste globale des joueurs
-        this.joueurs = [...this.joueurs, ...data];
-        const academy = this.academies.find((a) => a.id === academieId);
-        if (academy) {
-          academy.Joueur = data; // Met à jour l'académie avec les joueurs
-        }
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des joueurs:', error);
-      },
-    });
-  }
-
+ 
+ 
   startTimer(matchId: number, duration: number): void {
     const remainingTime = this.timers[matchId].remainingTime || 0;
     if (this.timers[matchId]?.intervalId) {

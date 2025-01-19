@@ -175,7 +175,26 @@
     flex-direction: column;
     gap: 10px;
   }
-  
+  .carton-list {
+  margin-top: 20px;
+}
+
+.carton-list li {
+  margin-bottom: 10px;
+}
+
+.carton-list span {
+  font-weight: bold;
+}
+
+.carton-list .rouge {
+  color: red;
+}
+
+.carton-list .jaune {
+  color: yellow;
+}
+
 
   /* Media Queries for responsive design */
   @media (max-width: 768px) {

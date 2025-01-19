@@ -92,25 +92,31 @@
       </tbody>
     </table>
   </div>
-   <!-- Liste des Cartons -->
-   <div class="cartons">
-    <h3>cartons</h3>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let carton of cartons">
-          <td>⚽{{ carton.temps }} |</td>
-          <td> {{ carton.joueur.nom }}</td>
-         
-        </tr>
-      </tbody>
-    </table>
+   
+
+  
+  
+  <!-- Liste des joueurs avec des cartons -->
+  <!-- Liste des joueurs avec des cartons -->
+  <div *ngIf="filteredJoueurs.length > 0; else noCartons">
+    <h3>Joueurs ayant reçu des cartons</h3>
+    <ul>
+      <li *ngFor="let joueur of filteredJoueurs">
+        {{ joueur.nom }} - {{ joueur.tempsCarton }}
+        <span *ngIf="matchDetails?.carton_jaune?.includes(joueur.id)">🟨</span>
+        <span *ngIf="matchDetails?.carton_rouge?.includes(joueur.id)">🟥</span>
+      </li>
+    </ul>
   </div>
+  
+  <ng-template #noCartons>
+    <p>Aucun joueur n'a reçu de carton pour ce match.</p>
+  </ng-template>
+  
+  
+  
+  
+   
   
   
   <!-- Ajouter un bouton pour l'ajout du carton -->
@@ -147,4 +153,5 @@
   </div>
  
   <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
+  
 </div>
