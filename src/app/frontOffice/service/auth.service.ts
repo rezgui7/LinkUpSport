@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, Observable, tap, throwError } from 'rxjs';
 import { User } from '../../models/User';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 
 const API_URL = 'http://localhost:8085/auth/';
@@ -15,6 +16,9 @@ export class AuthService {
   private readonly apiUrl = 'http://localhost:8085/auth'; 
   private readonly TOKEN_KEY = 'auth-token';
   private readonly USER_KEY = 'auth-user';
+  private helper = new JwtHelperService();
+  public role!: string;
+  public loggedUser!: string;
 
   constructor(private http: HttpClient, private router: Router) { }
 
@@ -107,6 +111,12 @@ logout(): void {
       })
     );
   }
-  
+  decodeJWT(token: any) {
+    if (token == undefined)
+      return;
+    const decodedToken = this.helper.decodeToken(token);
+    this.role = decodedToken.role;
+    this.loggedUser = decodedToken.sub;
+  }
   
 }
