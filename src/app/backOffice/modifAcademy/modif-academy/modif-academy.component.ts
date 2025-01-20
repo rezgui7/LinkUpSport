@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Academie } from '../../../_model/academie.model';
 import { FileHandle } from '../../../_model/file-handle.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServiceBackService } from '../../service/service-back.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { FormsModule, NgForm } from '@angular/forms';
-import { HttpClientModule, HttpErrorResponse } from '@angular/common/http';
+import { HttpClientModule, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../../frontOffice/service/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modif-academy',
@@ -20,7 +21,7 @@ import { AuthService } from '../../../frontOffice/service/auth.service';
 })
 export class ModifAcademyComponent implements OnInit {
   id:any;
-
+  windowWidth: number;
   academie: Academie = {
     id: 0,
     nom: '',
@@ -39,36 +40,70 @@ export class ModifAcademyComponent implements OnInit {
 
   constructor(      private route:ActivatedRoute,
     private router:Router,
-    private http:ServiceBackService ,private sanitizer: DomSanitizer){}
+    private http:ServiceBackService ,private sanitizer: DomSanitizer){
+      this.windowWidth = window.innerWidth;
+    }
 
   ngOnInit(): void {
     this.id = this.route.snapshot.params['id'];
-   console.log(this.id);
-
+   this.updateWindowSize();
    this.http.getAcademieById(this.id)
    .subscribe(data =>{
-    console.log(data);
     this.academie = this.mapDataToAcademie(data);
-    console.log(this.academie);
 
   }, error => console.log(error));
   
   }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    // Update the window size whenever the window is resized
+    this.updateWindowSize();
+  }
+
+  private updateWindowSize(): void {
+    // Set the window width property
+    this.windowWidth = window.innerWidth;
+  }
+  
   updateAcademie(academieForm : NgForm){
     const academieFormData = this.prepareFormData(this.academie);
     academieForm.reset();
 
         this.academie.images=[];
     this.http.updateAcademie(academieFormData).subscribe(
-      (res:Academie)=>{
-        
-        console.log(res);
-      },
-      (error: HttpErrorResponse)=>{
-        console.log(error);
-      }
+      (response: HttpResponse<any>)=>{
+              
+              if (response.status==201 || response.status==200) {
+                
+                
+                          Swal.fire('Hi', 'Academie ajouter avec succees !', 'success');
+              
+                        this.router.navigate(["admin/Academies"]);
+                
+                        }
+                        else  {
+                
+                          Swal.fire('Fail', 'ERREUR !', 'warning');
+                
+                        }
+            },
+            (error: any)=>{
+              if (error.status==201 || error.status==200) {
+                
+                
+                        Swal.fire('Hi', 'Academie ajouter avec succees !', 'success');
+              
+                      this.router.navigate(["admin/Academies"]);
+              
+                      }
+                      else  {
+              
+                        Swal.fire('Fail', 'ERREUR !', 'warning');
+              
+                      }
+            }
     );
-    console.log(this.academie);
     
   }
   

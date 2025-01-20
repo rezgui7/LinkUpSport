@@ -22,22 +22,23 @@
   <!-- Image Selection -->
   <div class="image-selection">
       <!-- Hidden file input -->
-      <input type="file" id="fileInput" (change)="fileChangeEvent($event)" class="file-input" style="display: none;" />
+      <input type="file" id="fileInput" accept="image/*"
+      (change)="fileChangeEvent($event)" class="file-input" style="display: none;" />
      
       <!-- Label to trigger the file input -->
       <label for="fileInput" class="btn btn-primary d-grid w-100">Choose File</label>
       <div *ngIf="isBrowser">
 
-      <image-cropper
-           [imageChangedEvent]="imageChangedEvent"
-           [maintainAspectRatio]="true"
-           [aspectRatio]="4 / 3"
-           format="png"
-           (imageCropped)="imageCropped($event)"
-           (imageLoaded)="imageLoaded($event)"
-           (cropperReady)="cropperReady()"
-           (loadImageFailed)="loadImageFailed()"
-           class="image-cropper"
+        <image-cropper
+        [imageChangedEvent]="imageChangedEvent"
+        [maintainAspectRatio]="true"
+        [aspectRatio]="4 / 3"
+        [format]="cropperFormat"
+        (imageCropped)="imageCropped($event)"
+        (imageLoaded)="imageLoaded($event)"
+        (cropperReady)="cropperReady()"
+        (loadImageFailed)="loadImageFailed()"
+        class="image-cropper"
       ></image-cropper>
       </div>
       <img [src]="croppedImage ? croppedImage : imagesToShow[0]" class="circled-image" />

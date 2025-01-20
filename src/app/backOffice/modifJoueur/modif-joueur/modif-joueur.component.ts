@@ -4,7 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ImageCroppedEvent, ImageCropperComponent, LoadedImage } from 'ngx-image-cropper';
+import { ImageCroppedEvent, ImageCropperComponent, LoadedImage, OutputFormat } from 'ngx-image-cropper';
 import { ServiceBackService } from '../../service/service-back.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { Joueur } from '../../../_model/joueur.model';
@@ -41,6 +41,7 @@ export class ModifJoueurComponent implements OnInit{
     categorie: false
    };
    isBrowser: boolean = false;
+  cropperFormat: OutputFormat = 'png'; // Default format is 'png'
 
 
   joueur:Joueur={
@@ -136,19 +137,36 @@ export class ModifJoueurComponent implements OnInit{
 
       this.http.updateJoueur(joueurFormData)
         .subscribe((response: HttpResponse<any>) => {
-          console.log(response)
-
-            Swal.fire('Hi', 'joueur ajouter avec succes !', 'success');
-  
-  this.r.navigate(["/admin/Joueurs"]);
+          if (response.status==201 || response.status==200) {
+            
+            
+                      Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
+          
+                    this.r.navigate(["admin/Joueurs"]);
+            
+                    }
+                    else  {
+            
+                      Swal.fire('Fail', 'ERREUR !', 'warning');
+            
+                    }
   
           
         },
         (error: any) => {
-          console.log(error)
+          if (error.status==201 || error.status==200) {
+            
+            
+                    Swal.fire('Hi', 'Joueur ajouter avec succees !', 'success');
           
-  
-            Swal.fire('Fail', 'Email already exists !', 'warning');
+                  this.r.navigate(["admin/Joueurs"]);
+          
+                  }
+                  else  {
+          
+                    Swal.fire('Fail', 'ERREUR !', 'warning');
+          
+                  }
   
           }
   
@@ -170,62 +188,55 @@ export class ModifJoueurComponent implements OnInit{
       }
   }
 
-  fileChangeEvent(event: Event): void {
-    this.fieldChanges = true;
+  fileChangeEvent(event: any): void {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files[0];
   
-    // Ensure event is from an input element
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      this.imageChangedEvent = event; // Store the entire event if needed
-  
-      // Optional: If you only need the file itself
-      const file = input.files[0];
-      console.log('Selected file:', file.name);
-  
-      // Add a warning for unsaved changes
-      if (this.fieldChanges) {
-        window.onbeforeunload = (e: BeforeUnloadEvent) => {
-          e.returnValue = 'The updated field will be lost!';
-          return e.returnValue; // Required for most browsers
-        };
+      // Validate file type
+      const validImageTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp'];
+      if (!validImageTypes.includes(file.type)) {
+        console.error('Unsupported file type:', file.type);
+        alert('Please upload a valid image file (JPEG, PNG, GIF, BMP, WEBP).');
+        return;
       }
+  
+      // Validate file size (optional, e.g., max 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        console.error('File is too large:', file.size);
+        alert('File size should not exceed 5MB.');
+        return;
+      }
+  
+      // Set the cropper format dynamically
+      this.cropperFormat = file.type === 'image/jpeg' ? 'jpeg' : 'png';
+  
+      // Assign the event for the cropper
+      this.imageChangedEvent = event;
     } else {
-      console.warn('No file selected.');
+      console.error('No file selected or file list is empty.');
     }
   }
   
-  imageCropped(event: ImageCroppedEvent): void {
-    if (!event.objectUrl) {
-      console.error('Cropped image URL is missing');
-      return;
+  imageCropped(event: ImageCroppedEvent) {
+    if (event.objectUrl) {
+      fetch(event.objectUrl as string)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const file = new File([blob], "croppedImage.png", { type: "image/png" });
+          const fileHandle: FileHandle = {
+            file: file,
+            url: this.sanitizer.bypassSecurityTrustUrl(
+              window.URL.createObjectURL(blob)
+            ),
+          };
+  
+          this.joueur.images.push(fileHandle);
+        })
+        .catch((error) => {
+          console.error("Error fetching blob from URL:", error);
+        });
     }
-  
-    // Fetch the Blob from the cropped image URL
-    fetch(event.objectUrl)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.blob();
-      })
-      .then((blob) => {
-        // Create a File object from the Blob
-        this.newImage = new File([blob], 'croppedImage1.png', { type: 'image/png' });
-  
-        // Securely update the cropped image for preview
-        this.croppedImage = this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob));
-  
-        // Create a FileHandle object and add it to joueur.images
-        const fileHandle: FileHandle = {
-          file: this.newImage,
-          url: this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(blob)),
-        };
-        this.joueur.images.push(fileHandle);
-      })
-      .catch((error) => {
-        console.error('Error fetching blob from URL:', error);
-        // Handle the error (e.g., show an alert or fallback behavior)
-      });
   }
   
   
