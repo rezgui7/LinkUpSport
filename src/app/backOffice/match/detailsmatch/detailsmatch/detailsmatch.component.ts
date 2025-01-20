@@ -10,6 +10,7 @@ import { match } from '../../../../_model/match';
 import { Joueur } from '../../../../_model/joueur.model';
 import { Academie } from '../../../../_model/academie.model';
 import { AuthService } from '../../../../frontOffice/service/auth.service';
+import { Console } from 'console';
 
 @Component({
   selector: 'app-detailsmatch',
@@ -37,7 +38,7 @@ export class DetailsmatchComponent implements OnInit {
   butsMarques: { joueur: Joueur; temps: string }[] = [];
   joueursAvecCartons: { joueur: Joueur; temps: string }[] = [];
   selectedCartonColor: string = '';
-
+ 
 
   isCartonModalOpen: boolean = false;
   constructor(
@@ -50,18 +51,20 @@ export class DetailsmatchComponent implements OnInit {
 
   ngOnInit(): void {
     this.matchId = +this.route.snapshot.paramMap.get('id')!;
+
     this.loadMatchDetails();
-    
-   
+
   }
   
   loadMatchDetails(): void {
     if (this.matchId) {
       this.matchService.getMatchById(this.matchId).subscribe({
         next: (match) => {
+          // Sauvegarde des détails du match dans la variable
           this.matchDetails = match;
           console.log('Match récupéré:', this.matchDetails);
-  
+          console.log(this.filteredJoueurs)
+          // Initialisation du timer pour le match
           this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
   
           // Charger les joueurs par académie
@@ -72,20 +75,57 @@ export class DetailsmatchComponent implements OnInit {
           // Charger les buts marqués depuis le localStorage
           const butsMarques = JSON.parse(localStorage.getItem(`butsMarques_${this.matchId}`) || '[]');
           this.butsMarques = butsMarques;
+          console.log('Buts marqués récupérés:', this.butsMarques);
   
           // Charger les joueurs avec cartons depuis le localStorage
           const joueursAvecCartons = JSON.parse(localStorage.getItem(`joueursAvecCartons_${this.matchId}`) || '[]');
-          this.joueursAvecCartons = joueursAvecCartons;
+          console.log('Données récupérées depuis localStorage pour joueurs avec cartons:', joueursAvecCartons);
   
-          console.log('Joueurs avec cartons récupérés:', this.joueursAvecCartons);
+          // Vérification plus poussée
+          if (Array.isArray(joueursAvecCartons) && joueursAvecCartons.length > 0) {
+            this.joueursAvecCartons = joueursAvecCartons;
+            this.filteredJoueurs = this.joueursAvecCartons.map(carton => ({
+              ...carton.joueur,
+              tempsCarton: carton.temps, // Ajout du temps du carton
+            }));
+            console.log('Joueurs filtrés avec cartons:', this.filteredJoueurs);
+          } else {
+            this.filteredJoueurs = [];
+            console.log('Aucun joueur avec carton trouvé ou structure des données incorrecte.');
+          }
   
-          // Filtrer les joueurs avec cartons
-          this.filteredJoueurs = this.joueursAvecCartons.map(carton => ({
-            ...carton.joueur,
-            tempsCarton: carton.temps, // Ajout du temps du carton
-          }));
+          // Gestion des cartons jaunes et rouges
+          if (match.carton_jaune && match.carton_rouge) {
+            // Vérification et traitement des cartons jaunes
+            let cartonJauneArray: number[] = match.carton_jaune.map((val: string) => parseInt(val.trim(), 10));
+            console.log('Cartons jaunes:', cartonJauneArray);
+            
+            // Vérification et traitement des cartons rouges
+            let cartonRougeArray: number[] = match.carton_rouge.map((val: string) => parseInt(val.trim(), 10));
+            console.log('Cartons rouges:', cartonRougeArray);
   
-          console.log('Joueurs filtrés avec cartons:', this.filteredJoueurs);
+            // Ajout des joueurs avec carton jaune
+            cartonJauneArray.forEach((temps, index) => {
+              this.filteredJoueurs.push({
+                joueur: this.joueurs[index], // Associez chaque joueur à un carton jaune
+                couleur: 'jaune',
+                temps: temps // Temps associé au carton jaune
+              });
+            });
+  
+            // Ajout des joueurs avec carton rouge
+            cartonRougeArray.forEach((temps, index) => {
+              this.filteredJoueurs.push({
+                joueur: this.joueurs[index], // Associez chaque joueur à un carton rouge
+                couleur: 'rouge',
+                temps: temps // Temps associé au carton rouge
+              });
+            });
+  
+            console.log('Joueurs avec cartons jaunes et rouges:', this.filteredJoueurs);
+          } else {
+            console.log('Pas de cartons jaunes ou rouges trouvés.');
+          }
         },
         error: (error) => {
           console.error('Erreur lors de la récupération des détails du match:', error);
@@ -98,6 +138,33 @@ export class DetailsmatchComponent implements OnInit {
       });
     }
   }
+  
+  
+getJoueursParAcademie(academieId: number): void {
+  this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
+    next: (data: Joueur[]) => {
+      console.log(`Joueurs récupérés pour l'académie ${academieId}:`, data);
+
+      if (data && data.length > 0) {
+        const nouveauxJoueurs = data.filter(newJoueur =>
+          !this.joueurs.some(j => j.id === newJoueur.id)
+        );
+        this.joueurs = [...this.joueurs, ...nouveauxJoueurs];
+
+        const academy = this.academies.find(a => a.id === academieId);
+        if (academy) {
+          academy.Joueur = data; // Mise à jour de l'académie
+        }
+      } else {
+        console.warn(`Aucun joueur trouvé pour l'académie ${academieId}`);
+      }
+    },
+    error: (error) => {
+      console.error('Erreur lors de la récupération des joueurs:', error);
+    },
+  });
+}
+
   
   
   
@@ -117,16 +184,18 @@ export class DetailsmatchComponent implements OnInit {
       this.matchService.addCarton(this.matchId, this.selectedAcademieId, this.selectedJoueurId, this.selectedCartonColor).subscribe({
         next: () => {
           const joueur = this.joueurs.find(j => j.id === this.selectedJoueurId);
+          console.log(joueur)
           if (joueur) {
-            // Récupérer ou initialiser les cartons du joueur
             let cartonsJoueur = JSON.parse(localStorage.getItem(`cartons_${joueur.id}_${this.matchId}`) || '[]');
-            // Ajouter un objet avec la couleur du carton et le temps
+            console.log(this.matchId)
             cartonsJoueur.push({ couleur: this.selectedCartonColor, temps: currentTimer });
             localStorage.setItem(`cartons_${joueur.id}_${this.matchId}`, JSON.stringify(cartonsJoueur));
-    
-            // Ajouter à joueursAvecCartons avec le temps et la couleur
+  
+            // Ajoutez le joueur à joueursAvecCartons
             this.joueursAvecCartons.push({ joueur, temps: currentTimer });
             localStorage.setItem(`joueursAvecCartons_${this.matchId}`, JSON.stringify(this.joueursAvecCartons));  // Sauvegarder dans le localStorage
+            
+            console.log('Carton ajouté:', { joueur, couleur: this.selectedCartonColor, temps: currentTimer });
           }
           Swal.fire('Succès', `Carton ${this.selectedCartonColor} ajouté avec succès.`, 'success');
           this.loadMatchDetails();  // Recharger les détails du match et les joueurs filtrés
@@ -143,28 +212,7 @@ export class DetailsmatchComponent implements OnInit {
   }
   
   
-  getJoueursParAcademie(academieId: number): void {
-    this.serviceBackService.getJoueursByAcademie(academieId).subscribe({
-      next: (data: Joueur[]) => {
-        if (data && data.length > 0) {
-          const nouveauxJoueurs = data.filter(newJoueur =>
-            !this.joueurs.some(j => j.id === newJoueur.id)
-          );
-          this.joueurs = [...this.joueurs, ...nouveauxJoueurs];
   
-          const academy = this.academies.find(a => a.id === academieId);
-          if (academy) {
-            academy.Joueur = data; // Mise à jour de l'académie
-          }
-        } else {
-          console.warn(`Aucun joueur trouvé pour l'académie ${academieId}`);
-        }
-      },
-      error: (error) => {
-        console.error('Erreur lors de la récupération des joueurs:', error);
-      },
-    });
-  }
 
   
   loadButsFromLocalStorage(): void {

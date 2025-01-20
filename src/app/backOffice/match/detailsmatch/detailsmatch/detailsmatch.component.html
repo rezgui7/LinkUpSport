@@ -20,7 +20,7 @@
     <div class="score-section">
       <h2>{{ matchDetails.score }}</h2>
       <div class="timer">
-        <p>Timer: {{ timers[matchDetails.id]?.timer }}</p>
+        <p>Timer: {{ timers[matchDetails.id].timer }}</p>
         
       </div>
     </div>
@@ -112,6 +112,9 @@
   <ng-template #noCartons>
     <p>Aucun joueur n'a reçu de carton pour ce match.</p>
   </ng-template>
+  
+  <!-- Déboguer filteredJoueurs -->
+  <pre>{{ filteredJoueurs | json }}</pre>
   
   
   
