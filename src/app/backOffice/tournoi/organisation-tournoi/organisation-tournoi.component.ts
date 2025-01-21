@@ -10,6 +10,7 @@ import { ServiceBackService } from '../../service/service-back.service';
 import { AuthService } from '../../../frontOffice/service/auth.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Platform } from '@angular/cdk/platform';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-organisation-tournoi',
@@ -111,6 +112,34 @@ export class OrganisationTournoiComponent implements OnInit {
 
   // Submit tournament form
   submitTournament(): void {
+if (!this.tournamentForm.value.nom || !this.tournamentForm.value.dateDebut ||
+     !this.tournamentForm.value.dateFin || !this.tournamentForm.value.lieu ||
+     !this.tournamentForm.value.nbrpoule ||!this.tournamentForm.value.type ||
+     !this.tournamentForm.value.academies) {
+
+      Swal.fire('Fail', 'Please fill in all required fields !', 'warning');
+
+
+      return;
+    }
+
+    if (this.tournamentForm.value.nbrpoule >= this.tournamentForm.value.academies.length) {
+      Swal.fire({
+        title: 'Invalid Number of Groups',
+        text: 'The number of groups must be less than the number of selected academies.',
+        icon: 'warning',
+        confirmButtonText: 'OK',
+        confirmButtonColor: '#3085d6',
+      });
+      return;
+    }
+    
+    if (this.tournamentForm.value.dateDebut>=this.tournamentForm.value.dateFin ) {
+      Swal.fire('Fail', 'unvalid Date', 'warning');
+
+      return;
+    }
+
     const formData = new FormData();
     const formValue = this.tournamentForm.value;
   

@@ -151,7 +151,6 @@ prepareFormData(joueur:Joueur): FormData{
   }
   
   userCreate() {
-    console.log(this.RegForm)
 
    if (!this.RegForm.value.nom || !this.RegForm.value.prenom ||
      !this.RegForm.value.datenaissance || !this.RegForm.value.telephone ||

@@ -1,97 +1,150 @@
 <br>
 <br>
 <br>
+<br>
+<br>
+<div class="container py-5 bg-light rounded shadow">
+  <h2 class="text-center mb-4 text-primary fw-bold">Create Tournament</h2>
 
-<div class="container py-5">
-    <h2 class="text-center mb-4">Create Tournament</h2>
-  
-    <form [formGroup]="tournamentForm" (ngSubmit)="submitTournament()" class="row g-3">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="nom" class="form-label">Tournament Name</label>
-          <input id="nom" formControlName="nom" class="form-control" type="text" required />
-        </div>
-      </div>
-  
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="dateDebut" class="form-label">Start Date</label>
-          <input id="dateDebut" formControlName="dateDebut" class="form-control" type="date" required />
-        </div>
-      </div>
-  
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="dateFin" class="form-label">End Date</label>
-          <input id="dateFin" formControlName="dateFin" class="form-control" type="date" required />
-        </div>
-      </div>
-  
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="lieu" class="form-label">Location</label>
-          <input id="lieu" formControlName="lieu" class="form-control" type="text" required />
-        </div>
-      </div>
-  
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="nbrpoule" class="form-label">Number of Groups</label>
-          <input id="nbrpoule" formControlName="nbrpoule" class="form-control" type="number" required />
-        </div>
-      </div>
-  
-      <div class="col-md-6">
-        <div class="form-group">
-          <label for="type" class="form-label">Tournament Type</label>
-          <select id="type" formControlName="type" class="form-control" required>
-            <option *ngFor="let type of tournamentTypes" [value]="type">{{ type }}</option>
-          </select>
-        </div>
-      </div>
-  
-      <div class="col-12">
-        <div class="mb-3">
-            <label for="academies" class="form-label">Select Academies</label>
-            <select
-              id="academies"
-              class="form-select"
-              [formControl]="academiesControl"
-              multiple
-            >
-              <option *ngFor="let academy of academieList" [value]="academy.id">
-                {{ academy.nom }}
-              </option>
-            </select>
-            <small class="text-muted">Hold down CTRL or CMD to select multiple academies</small>
-          </div>
-          
-      </div>
-  
-      <div class="col-12">
-        <div class="form-group">
-          <label for="images" class="form-label">Upload Images</label>
-          <input
-            id="images"
-            type="file"
-            (change)="onFileSelected($event)"
-            multiple
-            class="form-control-file">
-          
-          <div class="mt-2">
-            <ul class="list-unstyled">
-              <li *ngFor="let image of images" class="d-flex justify-content-between align-items-center">
-                {{ image.name }}
-                <button type="button" (click)="removeImage(image)" class="btn btn-sm btn-danger">Remove</button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-  
-      <div class="col-12 text-center">
-        <button type="submit" class="btn btn-primary" [disabled]="!tournamentForm.valid">Create Tournament</button>
-      </div>
-    </form>
+  <form [formGroup]="tournamentForm" (ngSubmit)="submitTournament()" class="row g-4">
+    <!-- Tournament Name -->
+    <div class="col-md-6">
+      <label for="nom" class="form-label fw-bold">Tournament Name</label>
+      <input
+        id="nom"
+        formControlName="nom"
+        class="form-control"
+        type="text"
+        placeholder="Enter tournament name"
+        required
+      />
+    </div>
+
+    <!-- Start Date -->
+    <div class="col-md-6">
+      <label for="dateDebut" class="form-label fw-bold">Start Date</label>
+      <input
+        id="dateDebut"
+        formControlName="dateDebut"
+        class="form-control"
+        type="date"
+        required
+      />
+    </div>
+
+    <!-- End Date -->
+    <div class="col-md-6">
+      <label for="dateFin" class="form-label fw-bold">End Date</label>
+      <input
+        id="dateFin"
+        formControlName="dateFin"
+        class="form-control"
+        type="date"
+        required
+      />
+    </div>
+
+    <!-- Location -->
+    <div class="col-md-6">
+      <label for="lieu" class="form-label fw-bold">Location</label>
+      <input
+        id="lieu"
+        formControlName="lieu"
+        class="form-control"
+        type="text"
+        placeholder="Enter location"
+        required
+      />
+    </div>
+
+    <!-- Number of Groups -->
+    <div class="col-md-6">
+      <label for="nbrpoule" class="form-label fw-bold">Number of Groups</label>
+      <input
+        id="nbrpoule"
+        formControlName="nbrpoule"
+        class="form-control"
+        type="number"
+        placeholder="Enter number of groups"
+        required
+      />
+    </div>
+
+    <!-- Tournament Type -->
+    <div class="col-md-6">
+      <label for="type" class="form-label fw-bold">Tournament Type</label>
+      <select id="type" formControlName="type" class="form-select" required>
+        <option value="" disabled selected>Select type</option>
+        <option *ngFor="let type of tournamentTypes" [value]="type">{{ type }}</option>
+      </select>
+    </div>
+
+    <!-- Select Academies -->
+    <!-- Select Academies -->
+<div class="col-12">
+  <label for="academies" class="form-label fw-bold">Select Academies</label>
+  <div class="input-group">
+    <span class="input-group-text">
+      <i class="bi bi-building"></i> <!-- Bootstrap Icons for visual cue -->
+    </span>
+    <select
+      id="academies"
+      class="form-select"
+      [formControl]="academiesControl"
+      multiple
+    >
+      <option value="" disabled>Select academies</option>
+      <option *ngFor="let academy of academieList" [value]="academy.id">
+        {{ academy.nom }}
+      </option>
+    </select>
   </div>
+  <small class="text-muted">
+    Hold down <kbd>CTRL</kbd> or <kbd>CMD</kbd> to select multiple academies
+  </small>
+</div>
+
+
+    <!-- Upload Images -->
+    <div class="col-12">
+      <label for="images" class="form-label fw-bold">Upload Images</label>
+      <input
+        id="images"
+        type="file"
+        (change)="onFileSelected($event)"
+        multiple
+        class="form-control"
+      />
+      <div class="mt-3">
+        <ul class="list-group">
+          <li
+            *ngFor="let image of images"
+            class="list-group-item d-flex justify-content-between align-items-center"
+          >
+            {{ image.name }}
+            <button
+              type="button"
+              (click)="removeImage(image)"
+              class="btn btn-sm btn-danger"
+            >
+              Remove
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="col-12 text-center">
+      <button
+        type="submit"
+        class="btn btn-primary btn-lg px-4"
+        [disabled]="!tournamentForm.valid"
+      >
+        Create Tournament
+      </button>
+    </div>
+  </form>
+</div>
+
   

@@ -4,7 +4,7 @@
 <br>
 <br>
 <div class="container">
-    <h1> LIST D'ACADEMIES </h1>
+    <h1> Liste Des Tournois</h1>
 <br>
 
 
@@ -28,7 +28,7 @@
             <div class="card">
     
     
-              <h5 class="card-header">ACADEMIES : </h5>
+              <h5 class="card-header">TOURNOI : </h5>
               <!-- Select Options Field -->
               
               
@@ -36,24 +36,28 @@
     
               <div class="table-responsive text-nowrap">
                   <table class="table">
-                    <caption class="ms-4">List of ACADEMIES</caption>
+                    <caption class="ms-4">List of TOURNOIs</caption>
                     <thead>
                       <tr>
                         <th>Nom</th>
-                        <th>adresse</th>
-                        <th>nom proprietaire</th>
-                        <th>telephone</th>
-                        <th>email</th>
+                        <th>Date Debut</th>
+                        <th>Date Fin</th>
+                        <th>Lieu</th>
+                        <th>Type</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr *ngFor="let item of academieList">
+                      <tr *ngFor="let item of tournoiList">
                         <td>{{item.nom}}</td>
-                        <td>{{item.adresse}}</td> 
-                        <td>{{item.nomproprietaire}}</td> 
+                        <td>{{item.dateDebut}}</td> 
+                        <td>{{item.dateFin}}</td> 
                         
-                        <td>{{item.telephone}}</td> 
-                        <td>{{item.email}}</td> 
+                        <td>{{item.lieu}}</td> 
+                        <td>
+                          <span [ngClass]="{'blue-cell': item.type === 'Championship', 'green-cell': item.type === 'Cup'}">
+                            {{item.type}}
+                          </span>
+                        </td>
                         
                         
                         <td>
@@ -63,9 +67,7 @@
                             </button>
                             <div class="dropdown-menu">
                             
-                              <a  class="badge bg-label-primary me-1"  href="admin/ModifierAcademie/{{item.id}}" class="dropdown-item" href="javascript:void(0);">
-                                <i class="bx bx-edit me-1"></i> Edit
-                              </a>
+                              
                               <button (click)="delete(item.id)" class="dropdown-item" href="javascript:void(0);"
                                 ><i class="bx bx-trash me-1"></i> Delete</button
                               >
@@ -95,9 +97,9 @@
         </div></div></div>
         <div class="buy-now">
           <a
-            href="admin/AddAcademy"
+            href="admin/Tournoi"
             class="btn btn-primary btn-buy-now"
-          >Add ACADEMIE</a
+          >Organiser un TOURNOI</a
           >
         </div>
 

@@ -12,6 +12,7 @@ import { RegisterComponent } from './frontOffice/auth/register/register/register
 import { RoleselectionComponent } from './frontOffice/auth/RolesSelection/roleselection/roleselection.component';
 import { AuthGuardService } from './frontOffice/service/auth-guard.service';
 import { OrganisationTournoiComponent } from './backOffice/tournoi/organisation-tournoi/organisation-tournoi.component';
+import { TournoisComponent } from './backOffice/tournoisList/tournois/tournois.component';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,10 @@ export const routes: Routes = [
             {
                 path:'Tournoi', title: "Tournoi",
                 component:OrganisationTournoiComponent
+            },
+            {
+                path:'TournoiList', title: "TournoiList",
+                component:TournoisComponent
             },
         ]
       },

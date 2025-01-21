@@ -1,0 +1,10 @@
+#academies:focus {
+    border-color: #0d6efd; /* Matches Bootstrap primary color */
+    box-shadow: 0 0 5px rgba(13, 110, 253, 0.5);
+  }
+  
+  .input-group-text {
+    background-color: #f8f9fa; /* Light background for the icon container */
+    border-right: none;
+  }
+  

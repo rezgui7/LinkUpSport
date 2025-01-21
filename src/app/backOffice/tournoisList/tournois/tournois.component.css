@@ -1,0 +1,71 @@
+/* Active Cell */
+/* Championship Cell (Blue) */
+.blue-cell {
+  background-color: blue;
+  color: white;
+  padding: 2px 4px; /* Smaller padding */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Championship cell */
+.blue-cell:hover {
+  background-color: darkblue;
+}
+
+/* Cup Cell (Green) */
+.green-cell {
+  background-color: green;
+  color: white;
+  padding: 2px 4px; /* Smaller padding */
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for Cup cell */
+.green-cell:hover {
+  background-color: darkgreen;
+}
+
+  
+  
+    
+  .pagination-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .pagination {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: inline-flex;
+      gap: 10px; /* Adjust the gap between pagination controls */
+    }
+    
+    .pagination.page-item {
+      display: flex;
+      align-items: center;
+    }
+    
+    .pagination.page-item:first-child,
+    .pagination.page-item:last-child {
+      cursor: pointer;
+    }
+    
+    .pagination.page-item.disabled.page-link {
+      color: #6c757d; /* Light gray color for disabled links */
+      cursor: not-allowed;
+    }
+    
+    .pagination.page-item.active.page-link {
+      background-color: #007bff; /* Example: blue background for active link */
+      color: white; /* White text for active link */
+    }
+  
+  
+    /*--------------------------------------------------------------------------------------*/
+  
