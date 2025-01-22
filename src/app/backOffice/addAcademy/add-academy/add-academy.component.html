@@ -60,6 +60,21 @@
               />
               <label class="form-label" for="form1Example5">Email</label>
             </div>
+             <!-- Owner Selection (Independent) -->
+          <div class="form-outline mb-3">
+            <select
+              class="form-select"
+              [(ngModel)]="selectedOwner"
+              name="ownerId"
+              required
+            >
+              <option value="" disabled selected>Select Owner</option>
+              <option *ngFor="let owner of ownersList" [value]="owner.id">
+                {{ owner.username }}
+              </option>
+            </select>
+            <label class="form-label">Select Owner</label>
+          </div>
             <div class="d-flex justify-content-between flex-column flex-md-row gap-2">
               <button type="button" class="btn btn-outline-dark" (click)="clear(academieForm)">Clear</button>
               <button type="submit" class="btn btn-success">Ajouter Academie</button>
