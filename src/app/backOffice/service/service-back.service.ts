@@ -66,4 +66,13 @@ export class ServiceBackService {
     return this.http.get<Joueur[]>(this.userUrl + `academie/${academieId}/joueurs`, { headers: this.getAuthHeaders() });
   }
   
+  createTournament(t: FormData): Observable<any> {
+    return this.http.post<any>(this.userUrl + 'tournoi/addNewTournoi', t, { headers: this.getAuthHeaders() });
+  }
+  getAllTournoi(): Observable<any> {
+    return this.http.get<any>(this.userUrl + 'tournoi/displayTournoi', { headers: this.getAuthHeaders() });
+  }
+  deleteTournoi(id: number): Observable<any> {
+    return this.http.delete(this.userUrl + 'tournoi/deleteTournoiByID' + `/${id}`, { headers: this.getAuthHeaders() });
+  }
 }

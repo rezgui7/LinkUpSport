@@ -15,6 +15,8 @@ import { AddmatchComponent } from './backOffice/match/addmatch/addmatch.componen
 import { UpdatematchComponent } from './backOffice/match/updatematch/updatematch.component';
 import { DisplaymatchComponent } from './backOffice/match/displaymatch/displaymatch.component';
 import { DetailsmatchComponent } from './backOffice/match/detailsmatch/detailsmatch/detailsmatch.component';
+import { OrganisationTournoiComponent } from './backOffice/tournoi/organisation-tournoi/organisation-tournoi.component';
+import { TournoisComponent } from './backOffice/tournoisList/tournois/tournois.component';
 
 export const routes: Routes = [
     {
@@ -60,7 +62,14 @@ export const routes: Routes = [
                 path: 'DisplayMatches',
                 component: DisplaymatchComponent
             },
-            { path: 'details-match/:id', component: DetailsmatchComponent }, 
+            { path: 'details-match/:id', component: DetailsmatchComponent },
+               { path:'Tournoi', title: "Tournoi",
+                component:OrganisationTournoiComponent
+            },
+            {
+                path:'TournoiList', title: "TournoiList",
+                component:TournoisComponent
+            },
         ]
       },
       
