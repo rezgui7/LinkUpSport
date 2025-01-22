@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { ServiceFrontService } from '../../../frontOffice/service/service-front.service';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
@@ -9,7 +9,8 @@ import { ServiceBackService } from '../../service/service-back.service';
 import { Joueur } from '../../../_model/joueur.model';
 import { Academie } from '../../../_model/academie.model';
 import { match } from '../../../_model/match';
-
+import { FileHandle } from '../../../_model/file-handle.model';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-displaymatch',
   standalone: true,
@@ -20,6 +21,27 @@ import { match } from '../../../_model/match';
 })
 export class DisplaymatchComponent implements OnInit {
   matches: match[] = [];
+ 
+  academie: Academie = {
+    id: 0,
+    nom: '',
+    adresse: '',
+    nomproprietaire: '',
+    telephone: '',
+    email: '',
+    images: [],
+    Joueur:[]
+  };
+  academie2: Academie = {
+    id: 0,
+    nom: '',
+    adresse: '',
+    nomproprietaire: '',
+    telephone: '',
+    email: '',
+    images: [],
+    Joueur:[]
+  };
   joueurs: Joueur[] = [];
   academies: Academie[] = [];
   timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
@@ -29,19 +51,47 @@ export class DisplaymatchComponent implements OnInit {
   selectedMatch: match | null = null;  // Track the currently selected match for goal button
   selectedMatchId: number | null = null;
   selectedJoueurId: number | null = null;
+  equipe1:any;
+  equipe2:any;
+  academiesLeft: Academie[] = []; // Add this property
+  academiesRight: Academie[] = []; // Add this property
   constructor(
     private matchService: ServiceFrontService,
-    private router: Router,
+    private router: Router,private sanitizer: DomSanitizer,
     private serviceBackService: ServiceBackService
   ) {}
 
   ngOnInit(): void {
     this.loadMatches();
+    
   }
   
+  
+  img:FileHandle={
+    file:new File(["file content"], "example.txt", { type: "text/plain" }),
+     url:"any"
+   }
  
+   private mapDataToAcademie(data: any): Academie {
+    // Adaptation des données avant de les assigner au modèle Course
+    const images: FileHandle[] = data.logoacademie.map((image: any) => {
+      return {
+        file: new File([image.imageData], image.name, { type: image.type }),
+        url: this.sanitizer.bypassSecurityTrustUrl(`data:${image.type};base64,${image.imageData}`)
+      };
+    });
   
-  
+    return {
+      id: data.id,
+    nom: data.nom,
+    adresse: data.adresse,
+    nomproprietaire: data.nomproprietaire,
+    telephone: data.telephone,
+    email: data.email,
+      images: images,
+      Joueur:[]
+    };
+  }
 
   
   getJoueursParAcademie(academieId: number): void {
@@ -80,16 +130,42 @@ export class DisplaymatchComponent implements OnInit {
     this.matchService.getAllMatches().subscribe({
       next: (matches) => {
         this.matches = matches;
+  
+        // Clear existing academies arrays
+        this.academiesLeft = [];
+        this.academiesRight = [];
+  
         matches.forEach((match) => {
+          console.log('Match Object:', match); // Log the full match object
+  
+          // Ensure academies exist and map them
+          if (match.academies && match.academies.length >= 2) {
+            const mappedAcademieLeft = this.mapDataToAcademie(match.academies[0]);
+            const mappedAcademieRight = this.mapDataToAcademie(match.academies[1]);
+  
+            // Push academies into their respective arrays
+            this.academiesLeft.push(mappedAcademieLeft);
+            this.academiesRight.push(mappedAcademieRight);
+  
+            // Log mapped academies
+            console.log('Mapped Academie Left:', this.academiesLeft);
+            console.log('Mapped Academie Right:', mappedAcademieRight);
+          } else {
+            console.warn(`Match with ID ${match.id} has incomplete academy data.`);
+          }
+  
+          // Initialize the timer for each match
           this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
-          // Load players for each academy in the match
-          match.academies.forEach((academy) => {
-            this.getJoueursParAcademie(academy.id);
-          });
         });
+  
+        // Log final arrays of academies
+        console.log('All Mapped Academies Left:', this.academiesLeft);
+        console.log('All Mapped Academies Right:', this.academiesRight);
       },
       error: (error) => {
         console.error('Erreur lors du chargement des matchs:', error);
+  
+        // Display error notification
         Swal.fire({
           icon: 'error',
           title: 'Erreur',
@@ -98,6 +174,9 @@ export class DisplaymatchComponent implements OnInit {
       },
     });
   }
+  
+  
+  
 
   deleteMatch(id: number): void {
     Swal.fire({

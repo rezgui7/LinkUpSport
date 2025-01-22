@@ -10,7 +10,6 @@ import { match } from '../../../../_model/match';
 import { Joueur } from '../../../../_model/joueur.model';
 import { Academie } from '../../../../_model/academie.model';
 import { AuthService } from '../../../../frontOffice/service/auth.service';
-import { Console } from 'console';
 
 @Component({
   selector: 'app-detailsmatch',
@@ -58,86 +57,83 @@ export class DetailsmatchComponent implements OnInit {
   
   loadMatchDetails(): void {
     if (this.matchId) {
-      this.matchService.getMatchById(this.matchId).subscribe({
-        next: (match) => {
-          // Sauvegarde des détails du match dans la variable
-          this.matchDetails = match;
-          console.log('Match récupéré:', this.matchDetails);
-          console.log(this.filteredJoueurs)
-          // Initialisation du timer pour le match
-          this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
-  
-          // Charger les joueurs par académie
-          match.academies.forEach((academy) => {
-            this.getJoueursParAcademie(academy.id);
-          });
-  
-          // Charger les buts marqués depuis le localStorage
-          const butsMarques = JSON.parse(localStorage.getItem(`butsMarques_${this.matchId}`) || '[]');
-          this.butsMarques = butsMarques;
-          console.log('Buts marqués récupérés:', this.butsMarques);
-  
-          // Charger les joueurs avec cartons depuis le localStorage
-          const joueursAvecCartons = JSON.parse(localStorage.getItem(`joueursAvecCartons_${this.matchId}`) || '[]');
-          console.log('Données récupérées depuis localStorage pour joueurs avec cartons:', joueursAvecCartons);
-  
-          // Vérification plus poussée
-          if (Array.isArray(joueursAvecCartons) && joueursAvecCartons.length > 0) {
-            this.joueursAvecCartons = joueursAvecCartons;
-            this.filteredJoueurs = this.joueursAvecCartons.map(carton => ({
-              ...carton.joueur,
-              tempsCarton: carton.temps, // Ajout du temps du carton
-            }));
-            console.log('Joueurs filtrés avec cartons:', this.filteredJoueurs);
-          } else {
-            this.filteredJoueurs = [];
-            console.log('Aucun joueur avec carton trouvé ou structure des données incorrecte.');
-          }
-  
-          // Gestion des cartons jaunes et rouges
-          if (match.carton_jaune && match.carton_rouge) {
-            // Vérification et traitement des cartons jaunes
-            let cartonJauneArray: number[] = match.carton_jaune.map((val: string) => parseInt(val.trim(), 10));
-            console.log('Cartons jaunes:', cartonJauneArray);
-            
-            // Vérification et traitement des cartons rouges
-            let cartonRougeArray: number[] = match.carton_rouge.map((val: string) => parseInt(val.trim(), 10));
-            console.log('Cartons rouges:', cartonRougeArray);
-  
-            // Ajout des joueurs avec carton jaune
-            cartonJauneArray.forEach((temps, index) => {
-              this.filteredJoueurs.push({
-                joueur: this.joueurs[index], // Associez chaque joueur à un carton jaune
-                couleur: 'jaune',
-                temps: temps // Temps associé au carton jaune
-              });
-            });
-  
-            // Ajout des joueurs avec carton rouge
-            cartonRougeArray.forEach((temps, index) => {
-              this.filteredJoueurs.push({
-                joueur: this.joueurs[index], // Associez chaque joueur à un carton rouge
-                couleur: 'rouge',
-                temps: temps // Temps associé au carton rouge
-              });
-            });
-  
-            console.log('Joueurs avec cartons jaunes et rouges:', this.filteredJoueurs);
-          } else {
-            console.log('Pas de cartons jaunes ou rouges trouvés.');
-          }
-        },
-        error: (error) => {
-          console.error('Erreur lors de la récupération des détails du match:', error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Erreur',
-            text: 'Un problème est survenu lors de la récupération des détails du match.',
-          });
-        },
-      });
+        this.matchService.getMatchById(this.matchId).subscribe({
+            next: (match) => {
+                // Sauvegarde des détails du match dans la variable
+                this.matchDetails = match;
+                console.log('Match récupéré:', this.matchDetails);
+                console.log(this.filteredJoueurs);
+
+                // Initialisation du timer pour le match
+                this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
+
+                // Charger les joueurs par académie
+                match.academies.forEach((academy) => {
+                    this.getJoueursParAcademie(academy.id);
+                });
+
+                // Charger les joueurs avec cartons sans utiliser localStorage
+                this.joueursAvecCartons = [];  // Réinitialiser les joueurs avec cartons
+                this.filteredJoueurs = this.joueursAvecCartons.map(carton => ({
+                    ...carton.joueur,
+                    tempsCarton: carton.temps, // Ajout du temps du carton
+                }));
+                console.log('Joueurs filtrés avec cartons:', this.filteredJoueurs);
+
+                // Gestion des cartons jaunes et rouges
+                if (Array.isArray(match.carton_jaune) && Array.isArray(match.carton_rouge)) {
+                    // Vérification et traitement des cartons jaunes
+                    let cartonJauneArray: number[] = match.carton_jaune.map((val: string) => parseInt(val.trim(), 10));
+                    console.log('Cartons jaunes:', cartonJauneArray);
+
+                    // Vérification et traitement des cartons rouges
+                    let cartonRougeArray: number[] = match.carton_rouge.map((val: string) => parseInt(val.trim(), 10));
+                    console.log('Cartons rouges:', cartonRougeArray);
+
+                    // Assurez-vous que `this.joueurs` est disponible avant d'y accéder
+                    if (this.joueurs && this.joueurs.length > 0) {
+                        // Ajout des joueurs avec carton jaune
+                        cartonJauneArray.forEach((temps, index) => {
+                            if (this.joueurs[index]) {
+                                this.filteredJoueurs.push({
+                                    joueur: this.joueurs[index], // Associez chaque joueur à un carton jaune
+                                    couleur: 'jaune',
+                                    temps: temps // Temps associé au carton jaune
+                                });
+                            }
+                        });
+
+                        // Ajout des joueurs avec carton rouge
+                        cartonRougeArray.forEach((temps, index) => {
+                            if (this.joueurs[index]) {
+                                this.filteredJoueurs.push({
+                                    joueur: this.joueurs[index], // Associez chaque joueur à un carton rouge
+                                    couleur: 'rouge',
+                                    temps: temps // Temps associé au carton rouge
+                                });
+                            }
+                        });
+                    } else {
+                        console.error('Liste des joueurs non disponible pour associer les cartons.');
+                    }
+
+                    console.log('Joueurs avec cartons jaunes et rouges:', this.filteredJoueurs);
+                } else {
+                    console.log('Pas de cartons jaunes ou rouges trouvés.');
+                }
+            },
+            error: (error) => {
+                console.error('Erreur lors de la récupération des détails du match:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur',
+                    text: 'Un problème est survenu lors de la récupération des détails du match.',
+                });
+            },
+        });
     }
-  }
+}
+
   
   
 getJoueursParAcademie(academieId: number): void {
@@ -180,50 +176,37 @@ getJoueursParAcademie(academieId: number): void {
   }
   addCarton(): void {
     if (this.selectedAcademieId && this.selectedJoueurId && this.selectedCartonColor && this.matchId) {
-      const currentTimer = this.timers[this.matchId]?.timer || '00:00';  // Obtenez le temps actuel du timer
-      this.matchService.addCarton(this.matchId, this.selectedAcademieId, this.selectedJoueurId, this.selectedCartonColor).subscribe({
-        next: () => {
-          const joueur = this.joueurs.find(j => j.id === this.selectedJoueurId);
-          console.log(joueur)
-          if (joueur) {
-            let cartonsJoueur = JSON.parse(localStorage.getItem(`cartons_${joueur.id}_${this.matchId}`) || '[]');
-            console.log(this.matchId)
-            cartonsJoueur.push({ couleur: this.selectedCartonColor, temps: currentTimer });
-            localStorage.setItem(`cartons_${joueur.id}_${this.matchId}`, JSON.stringify(cartonsJoueur));
-  
-            // Ajoutez le joueur à joueursAvecCartons
-            this.joueursAvecCartons.push({ joueur, temps: currentTimer });
-            localStorage.setItem(`joueursAvecCartons_${this.matchId}`, JSON.stringify(this.joueursAvecCartons));  // Sauvegarder dans le localStorage
-            
-            console.log('Carton ajouté:', { joueur, couleur: this.selectedCartonColor, temps: currentTimer });
-          }
-          Swal.fire('Succès', `Carton ${this.selectedCartonColor} ajouté avec succès.`, 'success');
-          this.loadMatchDetails();  // Recharger les détails du match et les joueurs filtrés
-          this.closeCartonModal();
-        },
-        error: (error) => {
-          console.error('Erreur lors de l\'ajout du carton:', error);
-          Swal.fire('Erreur', 'Une erreur est survenue lors de l\'ajout du carton.', 'error');
-        },
-      });
+        const currentTimer = this.timers[this.matchId]?.timer || '00:00';  // Obtenez le temps actuel du timer
+        this.matchService.addCarton(this.matchId, this.selectedAcademieId, this.selectedJoueurId, this.selectedCartonColor).subscribe({
+            next: () => {
+                const joueur = this.joueurs.find(j => j.id === this.selectedJoueurId);
+                console.log(joueur);
+                if (joueur) {
+                    // Retirer la gestion du localStorage
+                    // Ajoutez le joueur à joueursAvecCartons sans l'utilisation du localStorage
+                    this.joueursAvecCartons.push({ joueur, temps: currentTimer });
+                    console.log('Carton ajouté:', { joueur, couleur: this.selectedCartonColor, temps: currentTimer });
+                }
+                Swal.fire('Succès', `Carton ${this.selectedCartonColor} ajouté avec succès.`, 'success');
+                this.loadMatchDetails();  // Recharger les détails du match et les joueurs filtrés
+                this.closeCartonModal();
+            },
+            error: (error) => {
+                console.error('Erreur lors de l\'ajout du carton:', error);
+                Swal.fire('Erreur', 'Une erreur est survenue lors de l\'ajout du carton.', 'error');
+            },
+        });
     } else {
-      Swal.fire('Attention', 'Veuillez sélectionner une académie, un joueur et la couleur du carton.', 'warning');
+        Swal.fire('Attention', 'Veuillez sélectionner une académie, un joueur et la couleur du carton.', 'warning');
     }
-  }
+}
+
   
   
   
 
   
-  loadButsFromLocalStorage(): void {
-    if (this.matchId !== null) {
-      const storedButs = localStorage.getItem(`butsMarques_${this.matchId}`);
-      if (storedButs) {
-        this.butsMarques = JSON.parse(storedButs);
-       
-      }
-    }
-  }
+ 
 
   openGoalModal(matchId: number): void {
     this.isGoalModalOpen = true;

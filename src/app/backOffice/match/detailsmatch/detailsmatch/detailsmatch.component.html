@@ -92,36 +92,25 @@
       </tbody>
     </table>
   </div>
-   
-
-  
-  
-  <!-- Liste des joueurs avec des cartons -->
-  <!-- Liste des joueurs avec des cartons -->
-  <div *ngIf="filteredJoueurs.length > 0; else noCartons">
-    <h3>Joueurs ayant reçu des cartons</h3>
-    <ul>
-      <li *ngFor="let joueur of filteredJoueurs">
-        {{ joueur.nom }} - {{ joueur.tempsCarton }}
-        <span *ngIf="matchDetails?.carton_jaune?.includes(joueur.id)">🟨</span>
-        <span *ngIf="matchDetails?.carton_rouge?.includes(joueur.id)">🟥</span>
-      </li>
-    </ul>
-  </div>
-  
-  <ng-template #noCartons>
-    <p>Aucun joueur n'a reçu de carton pour ce match.</p>
-  </ng-template>
-  
-  <!-- Déboguer filteredJoueurs -->
-  <pre>{{ filteredJoueurs | json }}</pre>
-  
-  
-  
-  
-   
-  
-  
+     <!-- Liste des joueurs avec des cartons -->
+     <div *ngIf="filteredJoueurs.length > 0; else noCartons">
+      <h3>Joueurs ayant reçu des cartons</h3>
+      <ul>
+        <li *ngFor="let joueur of filteredJoueurs">
+          {{ joueur.nom }} - {{ joueur.tempsCarton }}
+          <span *ngIf="matchDetails?.carton_jaune?.includes(joueur.id)">🟨</span>
+          <span *ngIf="matchDetails?.carton_rouge?.includes(joueur.id)">🟥</span>
+        </li>
+      </ul>
+    </div>
+    
+    <ng-template #noCartons>
+      <p>Aucun joueur n'a reçu de carton pour ce match.</p>
+    </ng-template>
+    
+    <!-- Déboguer filteredJoueurs -->
+    <pre>{{ filteredJoueurs | json }}</pre>
+    
   <!-- Ajouter un bouton pour l'ajout du carton -->
   <button (click)="openCartonModal()">Ajouter Carton</button>
 

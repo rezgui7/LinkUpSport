@@ -1,34 +1,53 @@
 <h1>Liste des Matchs</h1>
 
 <div class="match-container">
-  <div class="match-card" *ngFor="let match of matches">
+  <div class="match-card" *ngFor="let match of matches; let i = index">
+    <!-- Match Header -->
     <div class="match-header">
       <p>
-        <strong></strong> {{ match.datetime | date: 'yyyy-MM-dd' }}
-        <strong></strong> {{ match.datetime | date: 'HH:mm' }}
+        <strong>Date:</strong> {{ match.datetime | date: 'yyyy-MM-dd' }}
+        <strong>Heure:</strong> {{ match.datetime | date: 'HH:mm' }}
       </p>
-      
     </div>
 
+    <!-- Match Content -->
     <div class="match-content">
+      <!-- Académie Gauche -->
       <div class="academie academie-left">
-        <h4>{{ match.academies[0]?.nom }}</h4>
-        
+        <h4>{{ academiesLeft[i]?.nom }}</h4>
+        <div class="position-relative">
+          <div *ngFor="let file of academiesLeft[i]?.images">
+            <img
+              [src]="file.url"
+              class="img-fluid rounded"
+              style="max-height: 100px;"
+              alt="Image de l'académie gauche">
+          </div>
+        </div>
       </div>
 
+      <!-- Section Score -->
       <div class="score-section">
         <h2>{{ match.score }}</h2>
       </div>
 
+      <!-- Académie Droite -->
       <div class="academie academie-right">
-        <h4>{{ match.academies[1]?.nom }}</h4>
-        
+        <h4>{{ academiesRight[i]?.nom }}</h4>
+        <div class="position-relative">
+          <div *ngFor="let file of academiesRight[i]?.images">
+            <img
+              [src]="file.url"
+              class="img-fluid rounded"
+              style="max-height: 100px;"
+              alt="Image de l'académie droite">
+          </div>
+        </div>
       </div>
     </div>
 
+    <!-- Match Footer -->
     <div class="match-footer">
-      
-      
       <button class="icon-button edit-button" (click)="navigateToUpdateMatch(match.id)">
         <i class="fas fa-pen"></i>
       </button>
