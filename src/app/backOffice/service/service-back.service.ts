@@ -26,6 +26,9 @@ export class ServiceBackService {
   getAllAcademies(): Observable<any> {
     return this.http.get<any>(this.userUrl + 'academie/displayAcademie', { headers: this.getAuthHeaders() });
   }
+  getAllOwnersWithoutAcademie(): Observable<any> {
+    return this.http.get<any>(this.userUrl + 'academie/displayOwnersWithoutAcademie', { headers: this.getAuthHeaders() });
+  }
 
   addAcademie(t: FormData): Observable<any> {
     return this.http.post<any>(this.userUrl + 'academie/addNewAcademie', t, { headers: this.getAuthHeaders() });

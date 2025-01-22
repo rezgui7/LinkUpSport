@@ -21,6 +21,9 @@ import Swal from 'sweetalert2';
 })
 export class AddAcademyComponent implements OnInit {
   academieList: any;
+  ownersList: any;
+  selectedOwner: string = ''; // Stores the selected owner ID
+
   windowWidth: number;
   academie: Academie = {
     id: 0,
@@ -36,6 +39,14 @@ export class AddAcademyComponent implements OnInit {
     this.windowWidth = window.innerWidth;
   }
   ngOnInit(): void {
+    this.http.getAllOwnersWithoutAcademie().subscribe(
+      (data) => {
+        this.ownersList = data;
+      },
+      (error) => {
+        console.error('Error fetching academies:', error);
+      }
+    );
     this.updateWindowSize();
     }
     @HostListener('window:resize', ['$event'])
@@ -105,6 +116,7 @@ export class AddAcademyComponent implements OnInit {
         academie.images[i].file.name
       );
     }
+    formData.append('idAcademyOwner', this.selectedOwner.toString());
     return formData;
   }
 
