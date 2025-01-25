@@ -20,33 +20,33 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
-    flex-wrap: nowrap; /* Désactive l'ajustement automatique pour que les éléments ne se réorganisent pas sur plusieurs lignes */
+    flex-wrap: nowrap;
 
-    .team {
+    .academie {
       width: 45%;
       padding: 15px;
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      margin-bottom: 20px; /* Ajoute un espacement vertical entre les équipes */
+      margin-bottom: 20px;
 
-      h3 {
+      h4 {
         font-size: 18px;
         text-align: center;
         margin-bottom: 15px;
         color: #333;
       }
 
-      ul {
-        list-style-type: none;
-        padding-left: 0;
+      .position-relative {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
 
-        li {
-          font-size: 14px;
-          text-align: center;
-          color: #555;
-          margin: 5px 0;
-        }
+      img {
+        max-height: 100px;
+        border-radius: 8px;
+        margin-bottom: 10px;
       }
     }
 
@@ -104,111 +104,69 @@
       background-color: #d45c33;
     }
   }
-  .goal-modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    z-index: 1000;
-  }
-  
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .modal-actions button {
-    margin: 5px;
-  }
-  
-  .goal-section button {
-    background: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .goal-section button i {
-    font-size: 1.2em;
-  }
-  
-  .goal-section button:hover {
-    background: #45a049;
-  }
-  .card-section button {
-    background-color: #ffcc00;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    margin: 5px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .card-section button:hover {
-    background-color: #ff9900;
-  }
-  
+
   .modal {
+    display: block; /* Assurez-vous que le modal est visible quand isModalOpen est true */
     position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3); /* Fond légèrement plus transparent */
+    z-index: 1000;
+    transition: opacity 0.3s ease; /* Transition pour adoucir l'apparition du modal */
+  }
+
+  .modal-content {
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: #fff;
+    background-color: white;
+    padding: 30px;
     border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px; /* Augmentez la largeur pour un meilleur confort */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.4s ease; /* Animation d'apparition du modal */
   }
-  
-  .modal-content {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 30px;
+    color: #333;
+    cursor: pointer;
+    transition: color 0.3s ease;
   }
-  .carton-list {
-  margin-top: 20px;
-}
 
-.carton-list li {
-  margin-bottom: 10px;
-}
+  .close:hover {
+    color: #ff7043; /* Changement de couleur au survol pour une meilleure interaction */
+  }
 
-.carton-list span {
-  font-weight: bold;
-}
-
-.carton-list .rouge {
-  color: red;
-}
-
-.carton-list .jaune {
-  color: yellow;
-}
-
+  /* Animation d'apparition du modal */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
 
   /* Media Queries for responsive design */
   @media (max-width: 768px) {
     .match-content {
       flex-direction: column;
-      align-items: stretch; /* Aligne les éléments en colonne sur les petits écrans */
+      align-items: stretch;
 
-      .team, .score-section {
+      .academie, .score-section {
         width: 100%;
-        margin-bottom: 20px; /* Ajoute un espacement vertical */
+        margin-bottom: 20px;
       }
 
       .score-section {
-        width: 100%; /* Prend toute la largeur sur les petits écrans */
+        width: 100%;
       }
     }
 

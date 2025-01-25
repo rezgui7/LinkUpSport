@@ -8,6 +8,8 @@ export class match {
     score: { [key: string]: number }; 
     carton_rouge: string[] = [];
     carton_jaune: string[] = [];
+    butteur: string[] = []; // Ajout de la propriété butteur
+
     academies: any[];  // Liste des academies associées au match
   
     constructor(
@@ -18,6 +20,8 @@ export class match {
       score: { [key: string]: number } = {},
       carton_rouge: string[] = [],
       carton_jaune: string[] = [],
+      butteur: string[] = [], // Initialisation de butteur
+
       academies: Academie[] = []
     ) {
       this.id = id;
@@ -27,6 +31,8 @@ export class match {
       this.score = score;
       this.carton_rouge = carton_rouge;
       this.carton_jaune = carton_jaune;
+      this.butteur = butteur;
+
       this.academies = academies;
     }
   }

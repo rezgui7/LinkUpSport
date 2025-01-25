@@ -33,6 +33,7 @@ export class AddmatchComponent {
       duree_mitemps: [0, Validators.required],
       datetime: ['', Validators.required], // Un champ pour la date et l'heure combinées
       academieIds: [[], [Validators.required, Validators.minLength(2)]], // Minimum 2 académies sélectionnées
+      score: ['-', Validators.required] 
     });
   }
 

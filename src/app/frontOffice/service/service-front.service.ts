@@ -52,7 +52,13 @@ export class ServiceFrontService {
     const headers = this.getAuthHeaders();
     return this.http.delete<void>(`${this.userUrl}/delete/${id}`, { headers });
   }
-  // Ajouter dans ServiceFrontService
+  
+
+getAcademyById(matchId: number, academieId: number): Observable<Academie | null> {
+  const headers = this.getAuthHeaders();
+  return this.http.get<Academie | null>(`${this.userUrl}/${matchId}/academie/${academieId}`, { headers });
+}
+
 updateMatchScore(matchId: number, academieId: number, joueurId: number): Observable<match> {
   const headers = this.getAuthHeaders();
   const params = new URLSearchParams();
@@ -66,29 +72,26 @@ updateMatchScore(matchId: number, academieId: number, joueurId: number): Observa
   );
 }
 
-getAcademyById(matchId: number, academieId: number): Observable<Academie | null> {
+// Méthode 2 : Récupérer les butteurs d'un match
+getMatchButteurs(matchId: number): Observable<string[]> {
   const headers = this.getAuthHeaders();
-  return this.http.get<Academie | null>(`${this.userUrl}/${matchId}/academie/${academieId}`, { headers });
+  return this.http.get<string[]>(`${this.userUrl}/${matchId}/butteurs`, { headers });
 }
-// Ajouter cette méthode dans votre ServiceFrontService
-// service-back.service.ts
+
+// Méthode 3 : Ajouter un carton
 addCarton(matchId: number, academieId: number, joueurId: number, couleurCarton: string): Observable<match> {
   const headers = this.getAuthHeaders();
-
-  // Construire les paramètres de la requête
-  const params = new URLSearchParams();
-  params.append('academieId', academieId.toString());
-  params.append('joueurId', joueurId.toString());
-  params.append('couleurCarton', couleurCarton);
-
-  // Appeler l'API backend pour ajouter un carton
   return this.http.put<match>(
-    `${this.userUrl}/addCarton/${matchId}?${params.toString()}`,
-    {},
+    `${this.userUrl}/addCarton/${matchId}?academieId=${academieId}&joueurId=${joueurId}&couleurCarton=${couleurCarton}`,
+    null,
     { headers }
   );
 }
 
-
+// Méthode 4 : Récupérer les joueurs ayant des cartons rouge et jaune
+getJoueursAvecCartons(matchId: number): Observable<Map<string, string[]>> {
+  const headers = this.getAuthHeaders();
+  return this.http.get<Map<string, string[]>>(`${this.userUrl}/joueursCartons/${matchId}`, { headers });
+}
  
 }

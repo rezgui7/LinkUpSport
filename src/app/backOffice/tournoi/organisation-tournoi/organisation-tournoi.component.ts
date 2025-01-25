@@ -173,7 +173,7 @@ console.log("Selected Academies", this.selectedAcademies); // This is already a 
     this.httpService.createTournament(formData).subscribe(
       (response) => {
         console.log('Tournament created successfully:', response);
-        this.router.navigate(['/tournaments']);
+        this.router.navigate(['admin/TournoiList']);
       },
       (error) => {
         console.error('Error creating tournament:', error);

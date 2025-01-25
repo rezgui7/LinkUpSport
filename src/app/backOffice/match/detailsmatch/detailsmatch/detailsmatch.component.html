@@ -9,141 +9,159 @@
 
   <div class="match-content">
     <!-- Équipe Gauche -->
-    <div class="team left-team">
-      <h3>{{ matchDetails.academies[0]?.nom }}</h3>
-      <ul>
-        <li *ngFor="let joueur of matchDetails.academies[0]?.joueurs"></li>
-      </ul>
+    <div class="academie academie-left" *ngIf="academiesLeft.length > 0">
+      <h4>{{ academiesLeft[0]?.nom }}</h4>
+      <div class="position-relative">
+        <div *ngFor="let file of academiesLeft[0]?.images">
+          <img
+            [src]="file.url"
+            class="img-fluid rounded"
+            style="max-height: 100px;"
+            alt="Image de l'académie gauche">
+        </div>
+      </div>
     </div>
 
     <!-- Score au Centre -->
     <div class="score-section">
       <h2>{{ matchDetails.score }}</h2>
       <div class="timer">
-        <p>Timer: {{ timers[matchDetails.id].timer }}</p>
-        
+        <p>Timer: {{ timers[matchDetails.id]?.timer || '00:00' }}</p>
       </div>
     </div>
 
     <!-- Équipe Droite -->
-    <div class="team right-team">
-      <h3>{{ matchDetails.academies[1]?.nom }}</h3>
-      <ul>
-        <li *ngFor="let joueur of matchDetails.academies[1]?.joueurs"></li>
-      </ul>
-    </div>
-  </div>
-  <div class="score-section">
-    <div class="timer">
-      <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
-        Start
-      </button>
-      <button class="stop-button" (click)="stopTimer(matchDetails.id)">
-        Stop
-      </button>
-    </div>
-    <div class="goal-section">
-      <button (click)="openGoalModal(matchDetails.id)">
-        <i class="fas fa-futbol"></i> Ajouter un but
-      </button>
-    </div>
-  </div>
-  
-  <!-- Modal pour ajouter un but -->
-  <div *ngIf="isGoalModalOpen" class="goal-modal">
-    <div class="modal-content">
-      <h3>Ajouter un But</h3>
-      <label for="academy">Académie :</label>
-      <select id="academy" [(ngModel)]="selectedAcademieId" (ngModelChange)="onAcademyChange($event)">
-        <option *ngFor="let academy of matchDetails.academies" [value]="academy.id">
-          {{ academy.nom }}
-        </option>
-      </select>
-      
-  
-      <label for="joueur">Joueur :</label>
-      <select id="joueur" [(ngModel)]="selectedJoueurId">
-        <option *ngFor="let joueur of joueurs" [value]="joueur.id">
-          {{ joueur.nom }}
-        </option>
-      </select>
-  
-      <div class="modal-actions">
-        <button (click)="addGoal(matchDetails.id)">Valider</button>
-        <button (click)="closeGoalModal()">Annuler</button>
+    <div class="academie academie-right" *ngIf="academiesRight.length > 0">
+      <h4>{{ academiesRight[0]?.nom }}</h4>
+      <div class="position-relative">
+        <div *ngFor="let file of academiesRight[0]?.images">
+          <img
+            [src]="file.url"
+            class="img-fluid rounded"
+            style="max-height: 100px;"
+            alt="Image de l'académie droite">
+        </div>
       </div>
     </div>
   </div>
-  <div class="buts-marques">
-    <h3>Buts Marqués</h3>
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let but of butsMarques">
-          <td>⚽{{ but.temps }} |</td>
-          <td> {{ but.joueur.nom }}</td>
-         
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Bouton Retour -->
+  <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
+
+  <!-- Boutons de Timer -->
+  <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
+    Start
+  </button>
+  <button class="stop-button" (click)="stopTimer(matchDetails.id)">
+    Stop
+  </button>
+
+  <!-- Ajout de buts et de cartons -->
+  <div class="actions">
+    <h3>Actions de Match</h3>
+
+    <!-- Bouton Ajouter But qui ouvre le modal -->
+    <button (click)="openModal()">Ajouter un But</button>
+
+    <!-- Modal pour sélectionner académie et joueur -->
+    <div *ngIf="isModalOpen" class="modal">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+
+        <h4>Sélectionner une Académie et un Joueur</h4>
+
+        <!-- Sélection d'Académie -->
+        <div>
+          <label for="academie">Académie:</label>
+          <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
+            <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
+              {{ academie.nom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Sélection de Joueur -->
+        <div>
+          <label for="joueur">Joueur:</label>
+          <select id="joueur" [(ngModel)]="selectedJoueurId">
+            <option *ngFor="let joueur of filteredJoueurs" [value]="joueur.id">
+              {{ joueur.nom }}
+            </option>
+          </select>
+        </div>
+
+        <button (click)="ajouterBut()">Ajouter le But</button>
+      </div>
+    </div>
   </div>
-     <!-- Liste des joueurs avec des cartons -->
-     <div *ngIf="filteredJoueurs.length > 0; else noCartons">
-      <h3>Joueurs ayant reçu des cartons</h3>
+  <div class="actions">
+    
+
+    <!-- Bouton Ajouter Carton qui ouvre le modal -->
+    <button (click)="openModal()">Ajouter un Carton</button>
+
+    <!-- Modal pour sélectionner académie, joueur, et type de carton -->
+    <div *ngIf="isModalOpen" class="modal">
+      <div class="modal-content">
+        <span class="close" (click)="closeModal()">&times;</span>
+
+        <h4>Sélectionner une Académie, un Joueur, et un Type de Carton</h4>
+
+        <!-- Sélection d'Académie -->
+        <div>
+          <label for="academie">Académie:</label>
+          <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
+            <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
+              {{ academie.nom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Sélection de Joueur -->
+        <div>
+          <label for="joueur">Joueur:</label>
+          <select id="joueur" [(ngModel)]="selectedJoueurId">
+            <option *ngFor="let joueur of filteredJoueurs" [value]="joueur.id">
+              {{ joueur.nom }} {{ joueur.prenom }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Sélection du Type de Carton -->
+        <div>
+          <label for="carton">Type de Carton:</label>
+          <select id="carton" [(ngModel)]="selectedCartonType">
+            <option value="jaune">Jaune</option>
+            <option value="rouge">Rouge</option>
+          </select>
+        </div>
+
+        <!-- Bouton Ajouter le Carton -->
+        <div>
+          <button (click)="addCarton()">Ajouter le Carton</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Résumé du Match -->
+  <div class="match-summary">
+    <h3>Résumé du Match</h3>
+    <div>
+      <h4>Buteurs :</h4>
       <ul>
-        <li *ngFor="let joueur of filteredJoueurs">
-          {{ joueur.nom }} - {{ joueur.tempsCarton }}
-          <span *ngIf="matchDetails?.carton_jaune?.includes(joueur.id)">🟨</span>
-          <span *ngIf="matchDetails?.carton_rouge?.includes(joueur.id)">🟥</span>
+        <li *ngFor="let butteur of matchDetails.butteur">
+          ⚽ {{ butteur }} 
         </li>
       </ul>
     </div>
-    
-    <ng-template #noCartons>
-      <p>Aucun joueur n'a reçu de carton pour ce match.</p>
-    </ng-template>
-    
-    <!-- Déboguer filteredJoueurs -->
-    <pre>{{ filteredJoueurs | json }}</pre>
-    
-  <!-- Ajouter un bouton pour l'ajout du carton -->
-  <button (click)="openCartonModal()">Ajouter Carton</button>
-
-  <!-- Modal ou formulaire pour ajouter un carton -->
-  <div *ngIf="isCartonModalOpen" class="goal-modal">
-    <div class="modal-content">
-      <h3>Ajouter un Carton</h3>
-
-      <label for="academy">Académie :</label>
-      <select id="academy" [(ngModel)]="selectedAcademieId" (ngModelChange)="onAcademyChange($event)">
-        <option *ngFor="let academy of matchDetails.academies" [value]="academy.id">
-          {{ academy.nom }}
-        </option>
-      </select>
-
-      <label for="joueur">Joueur :</label>
-      <select id="joueur" [(ngModel)]="selectedJoueurId">
-        <option *ngFor="let joueur of joueurs" [value]="joueur.id">{{ joueur.nom }}</option>
-      </select>
-
-      <label for="carton">Couleur du Carton :</label>
-      <select [(ngModel)]="selectedCartonColor">
-        <option value="jaune">Carton Jaune</option>
-        <option value="rouge">Carton Rouge</option>
-      </select>
-
-      <div class="modal-actions">
-        <button (click)="addCarton()">Ajouter le Carton</button>
-        <button (click)="closeCartonModal()">Annuler</button>
-      </div>
-    </div>
   </div>
- 
-  <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
-  
+  <div *ngIf="joueursAvecCartons.length > 0">
+    <h3>Joueurs avec Cartons</h3>
+    <ul>
+      <li *ngFor="let joueur of joueursAvecCartons">
+        {{ joueur.nom }} {{ joueur.prenom }} - Carton: {{ joueur.type }}
+      </li>
+    </ul>
+  </div>
 </div>

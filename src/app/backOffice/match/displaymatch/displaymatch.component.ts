@@ -22,26 +22,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class DisplaymatchComponent implements OnInit {
   matches: match[] = [];
  
-  academie: Academie = {
-    id: 0,
-    nom: '',
-    adresse: '',
-    nomproprietaire: '',
-    telephone: '',
-    email: '',
-    images: [],
-    Joueur:[]
-  };
-  academie2: Academie = {
-    id: 0,
-    nom: '',
-    adresse: '',
-    nomproprietaire: '',
-    telephone: '',
-    email: '',
-    images: [],
-    Joueur:[]
-  };
+  
   joueurs: Joueur[] = [];
   academies: Academie[] = [];
   timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
@@ -51,8 +32,7 @@ export class DisplaymatchComponent implements OnInit {
   selectedMatch: match | null = null;  // Track the currently selected match for goal button
   selectedMatchId: number | null = null;
   selectedJoueurId: number | null = null;
-  equipe1:any;
-  equipe2:any;
+ 
   academiesLeft: Academie[] = []; // Add this property
   academiesRight: Academie[] = []; // Add this property
   constructor(
