@@ -188,10 +188,22 @@ export class OrganisationTournoiComponent implements OnInit {
           Swal.fire('Error', 'There was an issue creating the tournament.', 'error');
         }
       },
-      (error) => {
-        console.error('Error during tournament creation:', error);
-        Swal.fire('Error', `There was an issue creating the tournament: ${error.message || error}`, 'error');
-      }
+      
+      (error: any)=>{
+              if (error.status==201 || error.status==200) {
+                
+                
+                        Swal.fire('Hi', 'tournoi ajouter avec succees !', 'success');
+              
+                        this.router.navigate(['admin/TournoiList']);
+              
+                      }
+                      else  {
+              
+                        Swal.fire('Fail', 'ERREUR !', 'warning');
+              
+                      }
+            }
     );
     
     

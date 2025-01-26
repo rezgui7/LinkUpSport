@@ -60,11 +60,15 @@ export class LoginComponent {
           confirmButtonText: 'OK'
         });
 
-        if (response.role === 'ROLE_RESPONSABLE' || response.role === 'ROLE_ORGANISATEUR') {
-          this.router.navigate(['/admin']);
+        if ( response.role === 'ROLE_ORGANISATEUR') {
+          this.router.navigate(['/admin/Academies']);
         } else if (response.role === 'ROLE_SUPERVISEUR') {
           this.router.navigate(['/user']);
-        } else {
+        } 
+        else if (response.role === 'ROLE_RESPONSABLE') {
+          this.router.navigate(['/admin/Joueurs']);
+        }
+        else {
           Swal.fire({
             title: 'Accès non autorisé',
             text: 'Vous n\'avez pas l\'autorisation d\'accéder à cette application.',

@@ -1,3 +1,9 @@
+<br>
+<br>
+<br>
+<br>
+<br>
+<div class="container">
 
 <h1>Détails du Match</h1>
 <div *ngIf="matchDetails" class="match-details">
@@ -150,24 +156,30 @@
 
 <!-- Joueurs avec Cartons -->
 <div class="match-summary">
+  <!-- Match Summary Header -->
   <h3>Joueurs avec Cartons</h3>
   
+  <section class="yellow-cards">
+    <h4> Cartons Jaunes:</h4>
+    <ul>
+      <li *ngFor="let joueur of joueursAvecCartonsJaune">
+        🟨 {{ joueur }}
+      </li>
+    </ul>
+  </section>
   
-    <!-- Affichage des cartons jaunes -->
-    <h4>Cartons jaunes:</h4>
-<ul>
-  <li *ngFor="let carton of joueursAvecCartons">
-    <span *ngIf="carton.couleurCarton === 'jaune'">{{ carton.nomJoueur }}</span>
-  </li>
-</ul>
-
-<h4>Cartons rouges:</h4>
-<ul>
-  <li *ngFor="let carton of joueursAvecCartons">
-    <span *ngIf="carton.couleurCarton === 'rouge'">{{ carton.nomJoueur }}</span>
-  </li>
-</ul>
-
+  <section class="red-cards">
+    <h4> Cartons Rouges:</h4>
+    <ul>
+      <li *ngFor="let joueur of joueursAvecCartonsRouge">
+        🟥 {{ joueur }}
+      </li>
+    </ul>
+  </section>
   
+</div>
+
+
+  </div>
   
 

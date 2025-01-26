@@ -29,7 +29,7 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
   timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
   selectedAcademieId: number | null = null;
   selectedJoueurId: number | null = null;
-  matchId: number | null = null;
+  matchId: any;
   matchDetails: match | null = null;
   academiesLeft: Academie[] = [];
   academiesRight: Academie[] = [];
@@ -37,6 +37,9 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
   isLoading = false;
   isModalOpen = false;
   joueursAvecCartons: any[] = []; // Liste des joueurs avec cartons
+  joueursAvecCartonsJaune: string[] = []; // List of players with yellow cards
+  joueursAvecCartonsRouge: string[] = []; // List of players with red cards
+  
   isCartonModalOpen = false;
 
   constructor(
@@ -214,27 +217,16 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
   getJoueursAvecCartons(): void {
     if (this.matchId) {
       this.matchService.getJoueursAvecCartons(this.matchId!).subscribe({
-        next: (cartons) => {
-          console.log('Cartons:', cartons); // Affichez cartons pour vérifier son type
+        next: (cartons: { cartonsRouges: string[], cartonsJaunes: string[] }) => {
+          console.log('Cartons:', cartons); // Log the response for debugging
   
-          // Vérifiez si cartons est un tableau ou un autre objet
-          if (Array.isArray(cartons)) {
-            this.joueursAvecCartons = cartons;
-          } else {
-            // Si cartons n'est pas un tableau, ajustez selon la structure reçue
-            this.joueursAvecCartons = Object.values(cartons);  // Si cartons est un objet, vous pouvez utiliser Object.values()
-          }
-  
-          console.log('Joueurs avec cartons:', this.joueursAvecCartons);
-          this.joueursAvecCartons.forEach((carton: any) => {
-            const joueur = this.joueurs.find(joueur => joueur.id === carton.id);
-            if (joueur) {
-              carton.nomJoueur = joueur.nom;
-              console.log('Nom du joueur avec carton:', joueur.nom);
-            } else {
-              console.log(`Joueur avec id ${carton.id} non trouvé.`);
-            }
-          });
+          // Assign the values from the backend response
+          this.joueursAvecCartonsRouge = cartons.cartonsRouges;
+          this.joueursAvecCartonsJaune = cartons.cartonsJaunes;
+
+          console.log('Cartons:', this.joueursAvecCartonsJaune); // Log the response for debugging
+          console.log('Cartons:', this.joueursAvecCartonsRouge); // Log the response for debugging
+
         },
         error: (err) => {
           console.error('Erreur lors de la récupération des joueurs avec cartons:', err);
@@ -243,6 +235,8 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
       });
     }
   }
+  
+  
   
   
   

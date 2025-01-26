@@ -249,3 +249,42 @@
     }
   }
 }
+.match-summary {
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.match-summary h3 {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  color: #333;
+}
+
+.match-summary section {
+  margin-bottom: 20px;
+}
+
+.match-summary h4 {
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+  color: #555;
+}
+
+.match-summary ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.match-summary li {
+  margin: 5px 0;
+}
+
+.match-summary span {
+  display: inline-block;
+  padding: 5px 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}

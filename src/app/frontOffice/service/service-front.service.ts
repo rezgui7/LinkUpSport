@@ -89,9 +89,11 @@ addCarton(matchId: number, academieId: number, joueurId: number, couleurCarton: 
 }
 
 // Méthode 4 : Récupérer les joueurs ayant des cartons rouge et jaune
-getJoueursAvecCartons(matchId: number): Observable<Map<string, string[]>> {
+
+getJoueursAvecCartons(matchId: string): Observable<{ cartonsRouges: string[], cartonsJaunes: string[] }> {
   const headers = this.getAuthHeaders();
-  return this.http.get<Map<string, string[]>>(`${this.userUrl}/joueursCartons/${matchId}`, { headers });
+
+  return this.http.get<{ cartonsRouges: string[], cartonsJaunes: string[] }>(`${this.userUrl}/joueursCartons/${matchId}`, { headers });
 }
- 
+
 }
