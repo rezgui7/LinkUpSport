@@ -1,5 +1,10 @@
+
+
 <h1>Ajouter un Match</h1>
+
 <form [formGroup]="matchForm" (ngSubmit)="addMatch()">
+  <h1>Ajouter un Match</h1> <!-- Titre centré dans le formulaire -->
+
   <label for="nbrmitemps">Nombre de Mi-temps</label>
   <input id="nbrmitemps" formControlName="nbrmitemps" type="number" />
 
@@ -7,15 +12,13 @@
   <input id="duree_mitemps" formControlName="duree_mitemps" type="number" />
 
   <label for="datetime">Date et Heure</label>
-    <input
-      id="datetime"
-      type="datetime-local"
-      formControlName="datetime"
-      class="form-control"
-      required
-    />
-
-  
+  <input
+    id="datetime"
+    type="datetime-local"
+    formControlName="datetime"
+    class="form-control"
+    required
+  />
 
   <label for="academieIds">Sélectionnez deux académies</label>
   <select id="academieIds" formControlName="academieIds" multiple size="5">
@@ -27,5 +30,7 @@
     Vous devez sélectionner au moins deux académies.
   </div>
 
-  <button type="submit" [disabled]="!matchForm.valid">Ajouter le Match</button>
+  <button type="submit" [disabled]="!matchForm.valid">Ajouter Match</button>
 </form>
+
+

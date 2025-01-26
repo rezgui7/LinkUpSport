@@ -112,17 +112,17 @@ export class OrganisationTournoiComponent implements OnInit {
 
   // Submit tournament form
   submitTournament(): void {
-if (!this.tournamentForm.value.nom || !this.tournamentForm.value.dateDebut ||
-     !this.tournamentForm.value.dateFin || !this.tournamentForm.value.lieu ||
-     !this.tournamentForm.value.nbrpoule ||!this.tournamentForm.value.type ||
-     !this.tournamentForm.value.academies) {
-
+    // Vérification des champs requis
+    if (!this.tournamentForm.value.nom || !this.tournamentForm.value.dateDebut ||
+        !this.tournamentForm.value.dateFin || !this.tournamentForm.value.lieu ||
+        !this.tournamentForm.value.nbrpoule ||!this.tournamentForm.value.type ||
+        !this.tournamentForm.value.academies) {
+  
       Swal.fire('Fail', 'Please fill in all required fields !', 'warning');
-
-
       return;
     }
-
+  
+    // Vérification du nombre de groupes
     if (this.tournamentForm.value.nbrpoule >= this.tournamentForm.value.academies.length) {
       Swal.fire({
         title: 'Invalid Number of Groups',
@@ -133,17 +133,18 @@ if (!this.tournamentForm.value.nom || !this.tournamentForm.value.dateDebut ||
       });
       return;
     }
-    
-    if (this.tournamentForm.value.dateDebut>=this.tournamentForm.value.dateFin ) {
-      Swal.fire('Fail', 'unvalid Date', 'warning');
-
+  
+    // Vérification des dates
+    if (this.tournamentForm.value.dateDebut >= this.tournamentForm.value.dateFin) {
+      Swal.fire('Fail', 'Unvalid Date', 'warning');
       return;
     }
-
+  
+    // Préparation des données pour l'envoi
     const formData = new FormData();
     const formValue = this.tournamentForm.value;
-  
-    // Create the tournoi object
+    
+    // Création de l'objet tournoi
     const tournoi = {
       nom: formValue.nom,
       dateDebut: formValue.dateDebut,
@@ -154,31 +155,47 @@ if (!this.tournamentForm.value.nom || !this.tournamentForm.value.dateDebut ||
       academies: formValue.academies,
     };
   
-    // Append tournoi as a JSON string
+    // Ajout du tournoi en tant que JSON
     formData.append('tournoi', new Blob([JSON.stringify(tournoi)], { type: 'application/json' }));
   
-    // Append selected images
+    // Ajout des images sélectionnées
     this.images.forEach((file) => formData.append('file', file));
   
-    // Append academy IDs
+    // Ajout des IDs des académies
     formValue.academies.forEach((academyId: number) => {
       formData.append('academyIds', academyId.toString());
     });
   
     console.log("Tournoi", JSON.stringify(this.tournamentForm.value, null, 2)); // Pretty-print JSON
-console.log("Images", this.images.map((file) => file.name)); // Log the names of the uploaded files
-console.log("Selected Academies", this.selectedAcademies); // This is already a simple array
-
-    // Call backend service
+    console.log("Images", this.images.map((file) => file.name)); // Log the names of the uploaded files
+    console.log("Selected Academies", this.selectedAcademies); // Already a simple array
+  
+    // Appel au service backend
     this.httpService.createTournament(formData).subscribe(
       (response) => {
-        console.log('Tournament created successfully:', response);
-        this.router.navigate(['admin/TournoiList']);
+        console.log('Tournament creation response:', response);  // Affiche la réponse pour débogage
+        if (response && response.status === 'success') {
+          Swal.fire({
+            title: 'Success',
+            text: 'Tournoi created successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#3085d6',
+          }).then(() => {
+            this.router.navigate(['admin/TournoiList']);
+          });
+        } else {
+          Swal.fire('Error', 'There was an issue creating the tournament.', 'error');
+        }
       },
       (error) => {
-        console.error('Error creating tournament:', error);
+        console.error('Error during tournament creation:', error);
+        Swal.fire('Error', `There was an issue creating the tournament: ${error.message || error}`, 'error');
       }
     );
+    
+    
   }
+  
   
 }

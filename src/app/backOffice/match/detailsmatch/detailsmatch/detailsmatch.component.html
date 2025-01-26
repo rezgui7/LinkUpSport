@@ -1,3 +1,4 @@
+
 <h1>Détails du Match</h1>
 <div *ngIf="matchDetails" class="match-details">
   <div class="match-header">
@@ -46,7 +47,6 @@
   </div>
 
   <!-- Bouton Retour -->
-  <button [routerLink]="'/admin/DisplayMatches'" class="back-button">Retour</button>
 
   <!-- Boutons de Timer -->
   <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
@@ -63,105 +63,111 @@
     <!-- Bouton Ajouter But qui ouvre le modal -->
     <button (click)="openModal()">Ajouter un But</button>
 
-    <!-- Modal pour sélectionner académie et joueur -->
-    <div *ngIf="isModalOpen" class="modal">
-      <div class="modal-content">
-        <span class="close" (click)="closeModal()">&times;</span>
+    <!-- Modal for Adding a Goal -->
+<div *ngIf="isModalOpen" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h4>Sélectionner une Académie et un Joueur</h4>
 
-        <h4>Sélectionner une Académie et un Joueur</h4>
-
-        <!-- Sélection d'Académie -->
-        <div>
-          <label for="academie">Académie:</label>
-          <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
-            <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
-              {{ academie.nom }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Sélection de Joueur -->
-        <div>
-          <label for="joueur">Joueur:</label>
-          <select id="joueur" [(ngModel)]="selectedJoueurId">
-            <option *ngFor="let joueur of filteredJoueurs" [value]="joueur.id">
-              {{ joueur.nom }}
-            </option>
-          </select>
-        </div>
-
-        <button (click)="ajouterBut()">Ajouter le But</button>
-      </div>
+    <!-- Sélection d'Académie -->
+    <div class="form-group">
+      <label for="academie">Académie:</label>
+      <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
+        <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
+          {{ academie.nom }}
+        </option>
+      </select>
     </div>
-  </div>
-  <div class="actions">
-    
 
-    <!-- Bouton Ajouter Carton qui ouvre le modal -->
-    <button (click)="openModal()">Ajouter un Carton</button>
-
-    <!-- Modal pour sélectionner académie, joueur, et type de carton -->
-    <div *ngIf="isModalOpen" class="modal">
-      <div class="modal-content">
-        <span class="close" (click)="closeModal()">&times;</span>
-
-        <h4>Sélectionner une Académie, un Joueur, et un Type de Carton</h4>
-
-        <!-- Sélection d'Académie -->
-        <div>
-          <label for="academie">Académie:</label>
-          <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
-            <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
-              {{ academie.nom }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Sélection de Joueur -->
-        <div>
-          <label for="joueur">Joueur:</label>
-          <select id="joueur" [(ngModel)]="selectedJoueurId">
-            <option *ngFor="let joueur of filteredJoueurs" [value]="joueur.id">
-              {{ joueur.nom }} {{ joueur.prenom }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Sélection du Type de Carton -->
-        <div>
-          <label for="carton">Type de Carton:</label>
-          <select id="carton" [(ngModel)]="selectedCartonType">
-            <option value="jaune">Jaune</option>
-            <option value="rouge">Rouge</option>
-          </select>
-        </div>
-
-        <!-- Bouton Ajouter le Carton -->
-        <div>
-          <button (click)="addCarton()">Ajouter le Carton</button>
-        </div>
-      </div>
+    <!-- Sélection de Joueur -->
+    <div class="form-group">
+      <label for="joueur">Joueur:</label>
+      <select id="joueur" [(ngModel)]="selectedJoueurId">
+        <option *ngFor="let joueur of filteredJoueurs" [value]="joueur.id">
+          {{ joueur.nom }}
+        </option>
+      </select>
     </div>
+
+    <button (click)="addAction()">Ajouter but</button>
   </div>
+</div>
+
+<!-- Modal for Adding a Carton -->
+<div *ngIf="isCartonModalOpen" class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeCartonModal()">&times;</span>
+    <h4>Sélectionner un Carton</h4>
+
+    <!-- Académie Selection -->
+    <div class="form-group">
+      <label for="academie">Académie:</label>
+      <select id="academie" [(ngModel)]="selectedAcademieId" (change)="onAcademieChange()">
+        <option *ngFor="let academie of matchDetails.academies" [value]="academie.id">
+          {{ academie.nom }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Joueur Selection -->
+    <div class="form-group">
+      <label for="joueur">Joueur:</label>
+      <select id="joueur" [(ngModel)]="selectedJoueurId">
+        <option *ngFor="let joueur of joueurs" [value]="joueur.id">
+          {{ joueur.nom }}
+        </option>
+      </select>
+    </div>
+
+    <!-- Carton Type Selection -->
+    <div class="form-group">
+      <label for="carton">Type de Carton:</label>
+      <select id="carton" [(ngModel)]="selectedCartonType">
+        <option value="jaune">Jaune</option>
+        <option value="rouge">Rouge</option>
+      </select>
+    </div>
+
+    <button (click)="addCarton()">Ajouter Carton</button>
+  </div>
+</div>
+
+<button (click)="openCartonModal()">Ajouter un Carton</button>
 
   <!-- Résumé du Match -->
-  <div class="match-summary">
-    <h3>Résumé du Match</h3>
-    <div>
-      <h4>Buteurs :</h4>
-      <ul>
-        <li *ngFor="let butteur of matchDetails.butteur">
-          ⚽ {{ butteur }} 
-        </li>
-      </ul>
-    </div>
-  </div>
-  <div *ngIf="joueursAvecCartons.length > 0">
-    <h3>Joueurs avec Cartons</h3>
+<div class="match-summary">
+  <h3>Résumé du Match</h3>
+  <div>
+    <h4>Buteurs :</h4>
     <ul>
-      <li *ngFor="let joueur of joueursAvecCartons">
-        {{ joueur.nom }} {{ joueur.prenom }} - Carton: {{ joueur.type }}
+      <li *ngFor="let butteur of matchDetails.butteur">
+        ⚽ {{ butteur }} 
+        
       </li>
     </ul>
   </div>
 </div>
+
+<!-- Joueurs avec Cartons -->
+<div class="match-summary">
+  <h3>Joueurs avec Cartons</h3>
+  
+  
+    <!-- Affichage des cartons jaunes -->
+    <h4>Cartons jaunes:</h4>
+<ul>
+  <li *ngFor="let carton of joueursAvecCartons">
+    <span *ngIf="carton.couleurCarton === 'jaune'">{{ carton.nomJoueur }}</span>
+  </li>
+</ul>
+
+<h4>Cartons rouges:</h4>
+<ul>
+  <li *ngFor="let carton of joueursAvecCartons">
+    <span *ngIf="carton.couleurCarton === 'rouge'">{{ carton.nomJoueur }}</span>
+  </li>
+</ul>
+
+  
+  
+

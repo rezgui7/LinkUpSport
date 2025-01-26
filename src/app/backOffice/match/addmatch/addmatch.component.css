@@ -1,33 +1,81 @@
-h1 {
-    text-align: center;
-    color: #4CAF50;
-  }
-  
+/* Titre centré avec une couleur verte */
+
+/* Titre principal en haut */
+/* Titre centré dans le formulaire */
+form h1 {
+  text-align: center;
+  font-size: 1.8rem; /* Taille légèrement plus petite pour s'intégrer */
+  color: #4CAF50;
+  margin-bottom: 20px; /* Espacement sous le titre */
+  font-weight: bold;
+}
+
+
+
+/* Style du formulaire */
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 2px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Marges et couleurs des labels */
+label {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Style des champs de saisie */
+input {
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Bouton avec hover et état désactivé */
+button {
+  padding: 12px;
+  background-color: #4caf50;
+  color: white;
+  border: 2px solid #fff;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin-top: 15px;
+}
+
+button:disabled {
+  background-color: #ccc;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
   form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto;
+    width: 90%;
+    padding: 15px;
   }
-  
-  label {
-    margin-top: 10px;
+
+  input, button {
+    font-size: 0.9rem;
   }
-  
-  input {
-    padding: 5px;
-    margin-bottom: 10px;
+
+  h1 {
+    font-size: 1.5rem;
   }
-  
-  button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-  }
-  
+}

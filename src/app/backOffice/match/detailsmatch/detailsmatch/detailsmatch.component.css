@@ -1,3 +1,4 @@
+
 .match-details {
   margin: 20px;
   padding: 25px;
@@ -21,6 +22,8 @@
     align-items: center;
     margin-top: 20px;
     flex-wrap: nowrap;
+    gap: 10px; /* Espace entre les boutons */
+
 
     .academie {
       width: 45%;
@@ -105,18 +108,6 @@
     }
   }
 
-  .modal {
-    display: block; /* Assurez-vous que le modal est visible quand isModalOpen est true */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.3); /* Fond légèrement plus transparent */
-    z-index: 1000;
-    transition: opacity 0.3s ease; /* Transition pour adoucir l'apparition du modal */
-  }
-
   .modal-content {
     position: absolute;
     top: 50%;
@@ -125,11 +116,50 @@
     background-color: white;
     padding: 30px;
     border-radius: 8px;
-    width: 400px; /* Augmentez la largeur pour un meilleur confort */
+    width: 400px; /* Standard width for modals */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.4s ease; /* Animation d'apparition du modal */
   }
-
+  
+  .form-group {
+    margin-bottom: 20px;
+  
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+  
+    select {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+    }
+  }
+  
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 16px;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+  
+  .modal-content h4 {
+    margin-bottom: 20px;
+    font-size: 18px;
+    text-align: center;
+  }
+  
   .close {
     position: absolute;
     top: 10px;
@@ -138,10 +168,38 @@
     color: #333;
     cursor: pointer;
     transition: color 0.3s ease;
+  
+    &:hover {
+      color: #ff7043;
+    }
   }
-
-  .close:hover {
-    color: #ff7043; /* Changement de couleur au survol pour une meilleure interaction */
+  
+  .modal {
+    display: block; /* Make modal visible when isModalOpen or isCartonModalOpen is true */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1000;
+    transition: opacity 0.3s ease;
+  }
+  .start-button,
+  .stop-button {
+    font-size: 12px; /* Réduit la taille de la police */
+    padding: 6px 10px; /* Réduit la taille du bouton */
+    background-color: #000; /* Noir pour les deux boutons */
+    color: white; /* Texte en blanc */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .start-button:hover,
+  .stop-button:hover {
+    background-color: #333; /* Assombrit le bouton au survol */
   }
 
   /* Animation d'apparition du modal */

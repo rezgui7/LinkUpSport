@@ -1,33 +1,78 @@
+/* Titre centré et coloré en vert */
 h1 {
-    text-align: center;
-    color: #4CAF50;
-  }
-  
+  text-align: center;
+  color: #4CAF50;
+  margin-bottom: 20px;
+}
+
+/* Style du formulaire avec une largeur responsive et un cadre blanc */
+form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px; /* Padding pour espacer le contenu à l'intérieur */
+  box-sizing: border-box;
+  background-color: #fff; /* Fond blanc pour le formulaire */
+  border: 2px solid #fff; /* Bordure blanche */
+  border-radius: 8px; /* Coins arrondis */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombre douce pour un effet de profondeur */
+}
+
+/* Espacement pour les labels */
+label {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333; /* Couleur de texte plus douce */
+}
+
+/* Champs de saisie avec padding, bordure et marges */
+input {
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+/* Style du bouton avec fond vert et texte blanc */
+button {
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  border: 2px solid #fff; /* Bordure blanche pour le bouton */
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+  margin-top: 15px; /* Espacement entre le formulaire et le bouton */
+  box-sizing: border-box;
+}
+
+/* Bouton désactivé avec couleur grise */
+button:disabled {
+  background-color: #ccc;
+}
+
+/* Effet au survol du bouton */
+button:hover {
+  background-color: #45a049;
+}
+
+/* Réactivité pour les petits écrans */
+@media (max-width: 600px) {
   form {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto;
+    width: 90%;
+    padding: 15px; /* Ajuste le padding pour les petits écrans */
   }
-  
-  label {
-    margin-top: 10px;
+
+  input, button {
+    font-size: 0.9rem;
   }
-  
-  input {
-    padding: 5px;
-    margin-bottom: 10px;
+
+  h1 {
+    font-size: 1.5rem; /* Ajuste la taille du titre sur les petits écrans */
   }
-  
-  button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:disabled {
-    background-color: #ccc;
-  }
-  
+}
