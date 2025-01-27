@@ -26,8 +26,15 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
   joueurs: Joueur[] = [];
   filteredJoueurs: Joueur[] = [];
   academies: Academie[] = [];
-  timers: { [key: number]: { timer: string; intervalId?: any; remainingTime: number } } = {};
-  selectedAcademieId: number | null = null;
+  timers: {
+    [key: number]: {
+      timer: string;
+      intervalId?: any;
+      remainingTime: number;
+      currentMiTemps: number; // Ajout de la propriété
+    };
+  } = {};
+    selectedAcademieId: number | null = null;
   selectedJoueurId: number | null = null;
   matchId: any;
   matchDetails: match | null = null;
@@ -41,6 +48,10 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
   joueursAvecCartonsRouge: string[] = []; // List of players with red cards
   
   isCartonModalOpen = false;
+
+  buteurs: { joueurId: number, temps: string }[] = [];
+cartonsJaunes: { joueurId: number, temps: string }[] = [];
+cartonsRouges: { joueurId: number, temps: string }[] = [];
 
   constructor(
     private matchService: ServiceFrontService,
@@ -135,8 +146,12 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
     this.getJoueursAvecCartons();  // Assurez-vous que cette méthode est appelée
 
   
-        if (match && match.id) {
-          this.timers[match.id] = { timer: '00:00', remainingTime: 0 };
+    if (match && match.id) {
+      this.timers[match.id] = {
+        timer: '00:00',
+        remainingTime: 0,
+        currentMiTemps: 1, // Initialisation de la mi-temps à 1
+      };
   
           if (match.academies && match.academies.length >= 2) {
             const mappedAcademieLeft = this.mapDataToAcademie(match.academies[0]);
@@ -188,7 +203,7 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
  
  
 
- 
+  
   
 
   addCarton(): void {
@@ -261,10 +276,17 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
         return;
       }
   
+      // Récupérer le temps actuel du match
+      const tempsActuel = this.timers[this.matchId].timer;
+  
       this.matchService.updateMatchScore(this.matchId!, academieId, joueurId).subscribe({
         next: (response) => {
           console.log('Score mis à jour:', response);
           Swal.fire('Succès', 'But ajouté avec succès.', 'success');
+          
+          // Ajouter le buteur à la liste avec le temps
+          this.buteurs.push({ joueurId, temps: tempsActuel });
+  
           this.loadMatchDetails();
           this.closeModal();
         },
@@ -279,37 +301,64 @@ export class DetailsmatchComponent implements OnInit, OnDestroy {
     }
   }
   
+  startTimer(matchId: number, duree_mitemps: number, nbrmitemps: number): void {
+  if (!this.timers[matchId]) {
+    this.timers[matchId] = {
+      intervalId: null,
+      timer: '00:00',
+      remainingTime: 0,
+      currentMiTemps: 1, // Initialisation de la mi-temps
+    };
+  }
 
-  startTimer(matchId: number, duration: number): void {
-    if (this.timers[matchId]?.intervalId) {
-      clearInterval(this.timers[matchId].intervalId);
+  const currentMiTemps = this.timers[matchId].currentMiTemps;
+
+  if (currentMiTemps > nbrmitemps) {
+    Swal.fire('Match terminé', 'Toutes les mi-temps sont terminées.', 'info');
+    return;
+  }
+
+  if (this.timers[matchId]?.intervalId) {
+    clearInterval(this.timers[matchId].intervalId);
+  }
+
+  let seconds = this.timers[matchId].remainingTime;
+
+  const intervalId = setInterval(() => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    this.timers[matchId].timer = `${this.formatTime(minutes)}:${this.formatTime(secs)}`;
+
+    if (seconds >= duree_mitemps * 60) {
+      clearInterval(intervalId); // Arrêter le timer à la fin de la mi-temps
+      this.timers[matchId].intervalId = null; // Réinitialiser l'intervalId
+      this.timers[matchId].remainingTime = 0; // Réinitialiser le temps restant
+      Swal.fire(
+        'Mi-temps terminée',
+        `La mi-temps ${currentMiTemps} est terminée. Cliquez sur "Start" pour commencer la prochaine mi-temps.`,
+        'info'
+      );
+      this.timers[matchId].currentMiTemps++; // Préparer la prochaine mi-temps
+      return;
     }
 
-    let seconds = 0;
-    const intervalId = setInterval(() => {
-      const minutes = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      this.timers[matchId].timer = `${this.formatTime(minutes)}:${this.formatTime(secs)}`;
+    seconds++;
+    this.timers[matchId].remainingTime = seconds;
+  }, 1000);
 
-      if (seconds >= duration * 60) {
-        clearInterval(intervalId);
-        Swal.fire('Temps écoulé', 'Le match est terminé !', 'info');
-      }
-      seconds++;
-      this.timers[matchId].remainingTime = seconds;
-    }, 1000);
+  this.timers[matchId].intervalId = intervalId;
+}
 
-    this.timers[matchId].intervalId = intervalId;
+stopTimer(matchId: number): void {
+  if (this.timers[matchId]?.intervalId) {
+    clearInterval(this.timers[matchId].intervalId);
+    delete this.timers[matchId].intervalId;
   }
+}
 
-  stopTimer(matchId: number): void {
-    if (this.timers[matchId]?.intervalId) {
-      clearInterval(this.timers[matchId].intervalId);
-      delete this.timers[matchId].intervalId;
-    }
-  }
+formatTime(value: number): string {
+  return value < 10 ? `0${value}` : `${value}`;
+}
 
-  formatTime(value: number): string {
-    return value < 10 ? `0${value}` : `${value}`;
-  }
+  
 }

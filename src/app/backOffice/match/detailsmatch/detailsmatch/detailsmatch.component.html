@@ -55,9 +55,11 @@
   <!-- Bouton Retour -->
 
   <!-- Boutons de Timer -->
-  <button class="start-button" (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps)">
-    Start
-  </button>
+  <button 
+  class="start-button" 
+  (click)="startTimer(matchDetails.id, matchDetails.duree_mitemps, matchDetails.nbrmitemps)">
+  Start
+</button>
   <button class="stop-button" (click)="stopTimer(matchDetails.id)">
     Stop
   </button>
@@ -147,7 +149,7 @@
     <h4>Buteurs :</h4>
     <ul>
       <li *ngFor="let butteur of matchDetails.butteur">
-        ⚽ {{ butteur }} 
+        ⚽ {{ butteur }}
         
       </li>
     </ul>
