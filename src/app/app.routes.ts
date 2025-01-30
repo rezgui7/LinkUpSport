@@ -17,6 +17,7 @@ import { DisplaymatchComponent } from './backOffice/match/displaymatch/displayma
 import { DetailsmatchComponent } from './backOffice/match/detailsmatch/detailsmatch/detailsmatch.component';
 import { OrganisationTournoiComponent } from './backOffice/tournoi/organisation-tournoi/organisation-tournoi.component';
 import { TournoisComponent } from './backOffice/tournoisList/tournois/tournois.component';
+import { Natif1617Component } from './frontOffice/natif/natif16-17/natif16-17.component';
 
 export const routes: Routes = [
     {
@@ -81,6 +82,7 @@ export const routes: Routes = [
       { path: 'login', component: LoginComponent },
   
   // Nouvelle route pour Register
+  { path: 'natif16_17', component: Natif1617Component },
   { path: 'register', component: RegisterComponent },
   { path: 'role', component: RoleselectionComponent },
 
