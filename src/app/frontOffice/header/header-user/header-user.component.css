@@ -1,0 +1,59 @@
+/* Style du dropdown */
+.dropdown {
+    position: relative;
+}
+
+.dropdown > .nav-link {
+    cursor: pointer;
+    padding: 10px 15px;
+    display: block;
+    font-weight: 600;
+    color: white; /* Texte "Matches" en blanc */
+    transition: color 0.3s ease-in-out;
+}
+
+/* Style du menu déroulant */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background: black; /* Bloc des "natives" en noir */
+    min-width: 200px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px 0;
+    list-style: none;
+    display: none;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+/* Style des éléments du menu */
+.dropdown-menu li {
+    padding: 8px 20px;
+}
+
+.dropdown-menu li a {
+    color: white; /* Texte des éléments en blanc pour contraste */
+    text-decoration: none;
+    font-weight: 500;
+    display: block;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    padding: 8px 10px;
+    border-radius: 5px;
+}
+
+/* Effet de survol en rouge */
+.dropdown-menu li a:hover {
+    background: red;
+    color: white;
+}
+
+/* Effet d'affichage fluide */
+.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
